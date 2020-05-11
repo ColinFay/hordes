@@ -33,10 +33,10 @@ const stats = library("stats");
 
 (async () => {
     try {
-        const a = await stats.lm("Sepal.Length ~ Sepal.Width, data = iris")
-        console.log(a)
+            const a = await stats.lm("Sepal.Length ~ Sepal.Width, data = iris")
+            console.log(a)
         } catch(e){
-        console.log(e)
+            console.log(e)
         }
     
     try {
