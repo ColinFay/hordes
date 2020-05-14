@@ -20,12 +20,12 @@ Calling `stats.lm("code")` will launch R, run `stats::lm("code")` and return the
 Note that `stats.lm("code")` returns a promise, where `stderr` and `stdout` reject the promise.  
 
 ``` javascript 
-const library = require('./src/library.js');
+const {library} = require('./src/library.js');
 const stats = library("stats");
 stats.lm("Sepal.Length ~ Sepal.Width, data = iris").then((e) => console.log(e))
 ```
 
-As they are promises, you can use them in an async/await pattern
+As they are promises, you can use them in an async/await pattern or with `then/catch`
 
 ``` javascript
 const library = require('./src/library.js');
@@ -171,7 +171,7 @@ const stats = library("stats");
 
 ``` javascript
 const express = require('express');
-const library = require('./src/library.js');
+const {library} = require('./src/library.js');
 const app = express();
 const stats = library("stats");
 
