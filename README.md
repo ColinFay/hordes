@@ -205,10 +205,6 @@ const base = library("base", process = '/usr/local/bin/RScript');
 
 ### Example
 
-+ Please see the [examples](/examples) folder for more detailed examples
-
-You'll find below one example with `async/await`, and another with `then/catch`
-
 #### Simple example 
 
 ``` javascript 
@@ -273,10 +269,16 @@ app.listen(2811, function () {
 })
 ```
 
-> http://localhost:2811/lm?left=iris$Sepal.Length&right=iris$Petal.Length
-> http://localhost:2811/rnorm?left=10
+-> http://localhost:2811/lm?left=iris$Sepal.Length&right=iris$Petal.Length
 
-#### Serving Shiny Apps
+-> http://localhost:2811/rnorm?left=10
+
+#### Serving Shiny Apps 
+
+Note that these methods won't close the Shiny sessions after the node app is closed / when the user close the tab. 
+These are examples that have been trimmed down for the sake of clarity.
+
++ One per user
 
 ```javascript
 const {shiny_waiter} = require("./src/waiters.js")
@@ -311,5 +313,41 @@ app.listen(2811, function () {
 })
 ```
 
-> http://localhost:2811/hexmake
-> http://localhost:2811/punkapi
+-> http://localhost:2811/hexmake
+
+-> http://localhost:2811/punkapi
+
++ Same for all users
+
+```javascript
+const {shiny_waiter} = require("./src/waiters.js")
+const express = require('express');
+const app = express();
+
+const enframe = (url) => {
+    return `<iframe src = '${url}' frameborder="0" style="overflow:hidden;" height="100%" width="100%"></iframe>`
+}
+
+(async () => {
+    const a = shiny_waiter("hexmake::run_app()");
+    const b = shiny_waiter("punkapi::run_app()");
+    const ab = await Promise.all([a, b]);
+    
+    app.get('/hexmake', (req, res) => {
+        res.send(enframe(ab[0].url));
+    })
+
+    app.get('/punkapi', (req, res) => {
+        res.send(enframe(ab[1].url));
+    })
+})()
+
+app.listen(2811, function () {
+    console.log('Example app listening on port 2811!')
+})
+
+```
+
+-> http://localhost:2811/hexmake
+
+-> http://localhost:2811/punkapi
