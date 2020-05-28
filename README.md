@@ -17,11 +17,12 @@ The `hordes` module contains the following functions:
 For example, `library("stats")` will return an object with all the functions from `{stats}`. 
 By doing `const stats = library("stats");`, you will have access to all the functions from `{stats}`, for example as `stats.lm()`. 
 Calling `stats.lm("code")` will launch R, run `stats::lm("code")` and return the output to Node. 
-Note that `stats.lm("code")` returns a promise, where `stderr` and `stdout` reject the promise.  
+
+__Note that every function returns a promise, where R `stderr` reject the promise  and `stdout` resolve it. __
 
 ``` javascript 
 const {library} = require('./src/library.js');
-const stats = library("stats");
+const stats = library(pak = "stats");
 stats.lm("Sepal.Length ~ Sepal.Width, data = iris").then((e) => console.log(e))
 ```
 
@@ -52,7 +53,7 @@ const stats = library("stats");
 )();
 ```
 
-Values returned by the `hordes` functions, once in NodeJS, are string values matchine the `stdout` of `Rscript`.
+Values returned by the `hordes` functions, once in NodeJS, are string values matching the `stdout` of `Rscript`.
 If you want to exchange data between R and NodeJS, use an interchangeable format (JSON, or raw string):
 
 ``` javascript
@@ -112,6 +113,59 @@ const mbase = mlibrary("base");
 )();
 ```
 
+#### Shiny and Markdown waiters
+
+You can launch a shiny app from node and wait for it to be ready (waits for the `Listening on` from Shiny)
+
+```javascript
+const {shiny_waiter} = require("./src/waiters.js")
+const express = require('express');
+const app = express();
+
+app.get('/hexmake', async (req, res) => {
+    try {
+        let shinyproc = await shiny_waiter("hexmake::run_app()");
+        res.send(`<iframe src = '${shinyproc.url}' frameborder="0" style="overflow:hidden;" height="100%" width="100%"></iframe>`);
+    } catch(e){
+        res.status(500).send("Error launching the Shiny App")
+    }
+})
+
+app.listen(2811, function () {
+  console.log('Example app listening on port 2811!')
+})
+```
+
+You can also do it with Markdown files (here, we have an example of running the app from the command line (hence ${process.cwd())).
+
+```javascript
+const {markdown_waiter} = require("./src/waiters.js")
+const app = require('express')();
+
+app.get('/untitled', async (req, res) => {
+    try {
+        let markdown = await markdown_waiter(`rmarkdown::render('${process.cwd()}/Untitled.Rmd', output_file = 'pouet/Untitled.html')`);
+        res.sendFile(`${process.cwd()}/pouet/Untitled.html`);
+    } catch(e){
+        console.log(e)
+        res.status(500).send("Error launching the Shiny App")
+    }
+})
+
+app.listen(2811, function () {
+  console.log('Example app listening on port 2811!')
+})
+```
+
+#### `install`
+
+`install` creates and install in a local library from a folder (wrapper around `remotes::install_local()`)
+
+``` javascript
+const install = require("./src/install.js")
+install.install_local("./attempt")
+```
+
 #### Changing the process that runs R
 
 By default, the R code is launched by `RScript`, but you can specify another (for example if you need another version of R):
@@ -127,12 +181,16 @@ const base = library("base", process = '/usr/local/bin/RScript');
         } catch(e){
             console.log(e)
         }
-
 }
 )();
 ```
 
+
 ### Example
+
++ Please see the [examples](/examples) folder for more detailed examples
+
+You'll find below one example with `async/await`, and another with `then/catch`
 
 #### Simple example 
 
