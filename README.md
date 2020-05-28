@@ -1,10 +1,17 @@
-# library
+# hordes
 
 R from NodeJS, the right way.
 
 ## About
 
-`hordes` will load and call R functions from inside NodeJS.
+`hordes` makes R available from NodeJS, the right way.
+
+The general philosophy for using `hordes` is that every R function call should be stateless. 
+With this idea in mind, you can build a package where functions are to be considered as 'endpoints' which are then called from NodeJS. 
+In other words, there is no "shared-state" between two calls to R. 
+If you want this to happen, you should either register the values inside Node or save it on disk.
+
+Examples below will probably make this idea clearer.
 
 ### How to 
 
@@ -16,14 +23,18 @@ The `hordes` module contains the following functions:
 
 For example, `library("stats")` will return an object with all the functions from `{stats}`. 
 By doing `const stats = library("stats");`, you will have access to all the functions from `{stats}`, for example as `stats.lm()`. 
+
 Calling `stats.lm("code")` will launch R, run `stats::lm("code")` and return the output to Node. 
 
-__Note that every function returns a promise, where R `stderr` reject the promise  and `stdout` resolve it. __
+**Note that every function returns a promise, where R `stderr` reject the promise  and `stdout` resolve it.**
 
 ``` javascript 
 const {library} = require('./src/library.js');
 const stats = library(pak = "stats");
-stats.lm("Sepal.Length ~ Sepal.Width, data = iris").then((e) => console.log(e))
+stats
+    .lm("Sepal.Length ~ Sepal.Width, data = iris")
+    .then((e) => console.log(e))
+    .catch((err) => console.error(err))
 ```
 
 As they are promises, you can use them in an async/await pattern or with `then/catch`
@@ -54,7 +65,7 @@ const stats = library("stats");
 ```
 
 Values returned by the `hordes` functions, once in NodeJS, are string values matching the `stdout` of `Rscript`.
-If you want to exchange data between R and NodeJS, use an interchangeable format (JSON, or raw string):
+If you want to exchange data between R and NodeJS, use an interchangeable format (JSON, arrow, or raw string):
 
 ``` javascript
 const {library} = require('./src/library.js');
@@ -77,9 +88,6 @@ const base = library("base");
 }
 )();
 ```
-
-Of course, the general philosophy is to build an R package, where each function is to be considered as an "endpoint", so that you can set the exact format to output, from R, for NodeJS. 
-
 
 #### `mlibrary`
 
@@ -115,7 +123,11 @@ const mbase = mlibrary("base");
 
 #### Shiny and Markdown waiters
 
-You can launch a shiny app from node and wait for it to be ready (waits for the `Listening on` from Shiny)
+You can launch a shiny app from node and wait for it to be ready (The function wait for the `Listening on` message from Shiny). 
+
+The promise resolves with `{shiny_proc, rawoutput, url}`: `shiny_proc` is the processs object from Node, `rawoutput` is the output buffer, and `url` is the url where the app runs.
+
+In the example below, each user connecting to `http://host:2811/hexmake` will have access to an instance of the Shiny app. 
 
 ```javascript
 const {shiny_waiter} = require("./src/waiters.js")
@@ -136,7 +148,7 @@ app.listen(2811, function () {
 })
 ```
 
-You can also do it with Markdown files (here, we have an example of running the app from the command line (hence ${process.cwd())).
+You can also do it with Markdown files (here, we have an example of running the app from the Node terminl (hence `${process.cwd()}`, which should be switched to `__dirname` in scripting mode).
 
 ```javascript
 const {markdown_waiter} = require("./src/waiters.js")
@@ -148,7 +160,7 @@ app.get('/untitled', async (req, res) => {
         res.sendFile(`${process.cwd()}/pouet/Untitled.html`);
     } catch(e){
         console.log(e)
-        res.status(500).send("Error launching the Shiny App")
+        res.status(500).send("Error Rendering the Markdown")
     }
 })
 
@@ -171,7 +183,7 @@ install.install_local("./attempt")
 By default, the R code is launched by `RScript`, but you can specify another (for example if you need another version of R):
 
 ``` javascript
-const library = require('./src/library.js').library;
+const {library} = require('./src/library.js');
 const base = library("base", process = '/usr/local/bin/RScript');
 
 (async () => {
@@ -184,7 +196,6 @@ const base = library("base", process = '/usr/local/bin/RScript');
 }
 )();
 ```
-
 
 ### Example
 
