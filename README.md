@@ -2,6 +2,12 @@
 
 R from NodeJS, the right way.
 
+Jump straight to examples: 
+
++ [Simple Example](#simple-example)
++ [API using Express](#api-using-express)
++ [Serving shiny apps](#serving-shiny-apps)
+
 ## About
 
 `hordes` makes R available from NodeJS, the right way.
@@ -244,14 +250,22 @@ const {library} = require('./src/library.js');
 const app = express();
 const stats = library("stats");
 
-app.get('/lm', function (req, res) {
-    stats.lm(`${req.query.left} ~ ${req.query.right}`)
-    .then((output) => {
+app.get('/lm', async (req, res) => {
+    try {
+        const output = await stats.lm(`${req.query.left} ~ ${req.query.right}`)
         res.send( '<pre>' + output + '</pre>' )
-    })
-    .catch((output) => {
-        res.send(output)
-    })
+    } catch(e){
+        res.status(500).send(e)
+    }
+})
+
+app.get('/rnorm', async (req, res) => {
+    try {
+        const output = await stats.rnorm(req.query.left)
+        res.send( '<pre>' + output + '</pre>' )
+    } catch(e) {
+        res.status(500).send(e)
+    }
 })
 
 app.listen(2811, function () {
@@ -260,3 +274,42 @@ app.listen(2811, function () {
 ```
 
 > http://localhost:2811/lm?left=iris$Sepal.Length&right=iris$Petal.Length
+> http://localhost:2811/rnorm?left=10
+
+#### Serving Shiny Apps
+
+```javascript
+const {shiny_waiter} = require("./src/waiters.js")
+const express = require('express');
+const app = express();
+
+const enframe = (url) => {
+    return `<iframe src = '${url}' frameborder="0" style="overflow:hidden;" height="100%" width="100%"></iframe>`
+}
+
+app.get('/hexmake', async (req, res) => {
+    try {
+        let shinyproc = await shiny_waiter("hexmake::run_app()");
+        res.send(enframe(shinyproc.url));
+    } catch(e){
+        res.status(500).send("Error launching the Shiny App")
+    }
+})
+
+
+app.get('/punkapi', async (req, res) => {
+    try {
+        let shinyproc = await shiny_waiter("punkapi::run_app()");
+       res.send(enframe(shinyproc.url));
+    } catch(e){
+        res.status(500).send("Error launching the Shiny App")
+    }
+})
+
+app.listen(2811, function () {
+  console.log('Example app listening on port 2811!')
+})
+```
+
+> http://localhost:2811/hexmake
+> http://localhost:2811/punkapi
