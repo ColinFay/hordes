@@ -1,12 +1,9 @@
 const child_process = require('child_process');
 const memoization = require('fast-memoize')
+const crypto = require('crypto');
 
-const library_mother = (pak, libloc = null, process = 'Rscript', memoized = false) => {
-    if (libloc === null){
-        var code = `cat(paste0('"', names(loadNamespace("${pak}")),'"', collapse = ","))`
-    } else {
-        var code = `cat(paste0('"', names(loadNamespace("${pak}", lib.loc = "${libloc}")),'"', collapse = ","))`
-    }
+const library_mother = (pak, process = 'Rscript', memoized = false) => {
+    var code = `cat(paste0('"', names(loadNamespace("${pak}")),'"', collapse = ","))`
     let funs = child_process.spawnSync(
         process, 
         ['-e', 
@@ -42,12 +39,12 @@ const library_mother = (pak, libloc = null, process = 'Rscript', memoized = fals
     return functions_
 }
 
-const library = (pak, libloc = null, process = 'Rscript') => {
-    return library_mother(pak, libloc, process, memoized = false);
+const library = (pak, process = 'Rscript') => {
+    return library_mother(pak, process, memoized = false);
 }
 
-const mlibrary = (pak, libloc = null, process = 'Rscript') => {
-    return library_mother(pak, libloc, process, memoized = true);
+const mlibrary = (pak, process = 'Rscript') => {
+    return library_mother(pak, process, memoized = true);
 }
 
 module.exports = {
