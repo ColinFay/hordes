@@ -278,6 +278,8 @@ app.listen(2811, function () {
 Note that these methods won't close the Shiny sessions after the node app is closed / when the user close the tab. 
 These are examples that have been trimmed down for the sake of clarity.
 
+When called, the waiters return an object of class [ChildProcess](https://nodejs.org/api/child_process.html#child_process_class_childprocess) as `.proc`, that can be manipulated as such.
+
 + One per user
 
 ```javascript
@@ -317,7 +319,7 @@ app.listen(2811, function () {
 
 -> http://localhost:2811/punkapi
 
-+ Same for all users
++ Same app for all users
 
 ```javascript
 const {shiny_waiter} = require("./src/waiters.js")
