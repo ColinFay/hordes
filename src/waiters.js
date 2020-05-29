@@ -3,28 +3,28 @@ const { spawn } = require('child_process');
 const waiter = (code, solve_on, error_on) => {
 
     return new Promise(function (resolve, reject) {
-        shiny_proc = spawn('Rscript', ['-e', code]);
+        proc = spawn('Rscript', ['-e', code]);
 
-        shiny_proc.stderr.on('data', (data) => {
+        proc.stderr.on('data', (data) => {
             if (data.includes(error_on)) {
                 reject(data.toString())
             }
             if (data.includes(solve_on)) {
                 resolve({ 
-                    shiny_proc, 
+                    proc, 
                     rawoutput: data, 
                     url: data.toString().split(" ")[2]
                 })
             }
         });
 
-        shiny_proc.stdout.on('data', (data) => {
+        proc.stdout.on('data', (data) => {
             if (data.includes(error_on)) {
                 reject(data.toString())
             }
             if (data.includes(solve_on)) {
                 resolve({ 
-                    shiny_proc, 
+                    proc, 
                     rawoutput: data, 
                     url: data.toString().split(" ")[2]
                 })
