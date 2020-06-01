@@ -35,18 +35,17 @@ Calling `stats.lm("code")` will launch R, run `stats::lm("code")` and return the
 **Note that every function returns a promise, where R `stderr` reject the promise  and `stdout` resolve it.**
 
 ``` javascript 
-const {library} = require('./src/library.js');
+const {library} = require('./index.js');
 const stats = library(pak = "stats");
-stats
-    .lm("Sepal.Length ~ Sepal.Width, data = iris")
-    .then((e) => console.log(e))
-    .catch((err) => console.error(err))
+stats.lm("Sepal.Length ~ Sepal.Width, data = iris").
+    then((e) => console.log(e)).
+    catch((err) => console.error(err))
 ```
 
 As they are promises, you can use them in an async/await pattern or with `then/catch`
 
 ``` javascript
-const library = require('./src/library.js');
+const {library} = require('./index.js');
 const stats = library("stats");
 
 (async () => {
@@ -74,7 +73,7 @@ Values returned by the `hordes` functions, once in NodeJS, are string values mat
 If you want to exchange data between R and NodeJS, use an interchangeable format (JSON, arrow, or raw string):
 
 ``` javascript
-const {library} = require('./src/library.js');
+const {library} = require('./index.js');
 const jsonlite = library("jsonlite");
 const base = library("base");
 
@@ -100,8 +99,7 @@ const base = library("base");
 `mlibrary` does the same job as `library` except the functions are natively memoized. 
 
 ``` javascript
-const library = require('./src/library.js').library;
-const mlibrary = require('./src/library.js').mlibrary;
+const {library, mlibrary} = require('./index.js');
 const base = library("base");
 const mbase = mlibrary("base");
 
@@ -136,7 +134,7 @@ The promise resolves with `{shiny_proc, rawoutput, url}`: `shiny_proc` is the pr
 In the example below, each user connecting to `http://host:2811/hexmake` will have access to an instance of the Shiny app. 
 
 ```javascript
-const {shiny_waiter} = require("./src/waiters.js")
+const {shiny_waiter} = require("./index.js")
 const express = require('express');
 const app = express();
 
@@ -157,7 +155,7 @@ app.listen(2811, function () {
 You can also do it with Markdown files (here, we have an example of running the app from the Node terminl (hence `${process.cwd()}`, which should be switched to `__dirname` in scripting mode).
 
 ```javascript
-const {markdown_waiter} = require("./src/waiters.js")
+const {markdown_waiter} = require("./index.js")
 const app = require('express')();
 
 app.get('/untitled', async (req, res) => {
@@ -180,7 +178,7 @@ app.listen(2811, function () {
 `install` creates and install in a local library from a folder (wrapper around `remotes::install_local()`)
 
 ``` javascript
-const install = require("./src/install.js")
+const install = require("./index.js")
 install.install_local("./attempt")
 ```
 
@@ -189,7 +187,7 @@ install.install_local("./attempt")
 By default, the R code is launched by `RScript`, but you can specify another (for example if you need another version of R):
 
 ``` javascript
-const {library} = require('./src/library.js');
+const {library} = require('./index.js');
 const base = library("base", process = '/usr/local/bin/RScript');
 
 (async () => {
@@ -208,7 +206,7 @@ const base = library("base", process = '/usr/local/bin/RScript');
 #### Simple example 
 
 ``` javascript 
-const {library} = require('./src/library.js');
+const {library} = require('./index.js');
 const dplyr = library("dplyr");
 const stats = library("stats");
 
@@ -242,7 +240,7 @@ const stats = library("stats");
 
 ``` javascript
 const express = require('express');
-const {library} = require('./src/library.js');
+const {library} = require('./index.js');
 const app = express();
 const stats = library("stats");
 
@@ -283,7 +281,7 @@ When called, the waiters return an object of class [ChildProcess](https://nodejs
 + One per user
 
 ```javascript
-const {shiny_waiter} = require("./src/waiters.js")
+const {shiny_waiter} = require('./index.js');
 const express = require('express');
 const app = express();
 
@@ -322,7 +320,7 @@ app.listen(2811, function () {
 + Same app for all users
 
 ```javascript
-const {shiny_waiter} = require("./src/waiters.js")
+const {shiny_waiter} = require('./index.js');
 const express = require('express');
 const app = express();
 
