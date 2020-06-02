@@ -28,11 +28,12 @@ The `hordes` module contains the following functions:
 `library` behaves as R `library()` function, except that the output is a JavaScript object with all the functions from the package. 
 
 For example, `library("stats")` will return an object with all the functions from `{stats}`. 
-By doing `const stats = library("stats");`, you will have access to all the functions from `{stats}`, for example as `stats.lm()`. 
+By doing `const stats = library("stats");`, you will have access to all the functions from `{stats}`, for example `stats.lm()`. 
 
 Calling `stats.lm("code")` will launch R, run `stats::lm("code")` and return the output to Node. 
 
 **Note that every function returns a promise, where R `stderr` reject the promise  and `stdout` resolve it.**
+This point is kind of important if you're building your own package that will be then called by `hordes`.
 
 ``` javascript 
 const {library} = require('./index.js');
@@ -149,13 +150,13 @@ Promise { <pending> }
 
 ### `get_hash`
 
-When calling `library()` or `mlibrary()`, you can specify a hash, which is compiled the first time with `get_hash`. 
-This has is computed from the `DESCRIPTION` of the package called. 
-That way, if ever the `DESCRIPTION` file changes (version update...), you can get alerted (app won't launch). 
+When calling `library()` or `mlibrary()`, you can specify a hash, which can be compiled with `get_hash`. 
+This hahs is computed from the `DESCRIPTION` of the package called. 
+That way, if ever the `DESCRIPTION` file changes (version update, or stuff like that...), you can get alerted (app won't launch). 
 Just ignore this param if you don't care about that (but you should). 
 
 ``` javascript
-const {get_hash} = require('./index.js');
+const {library, get_hash} = require('./index.js');
 get_hash("golem")
 ```
 
@@ -167,12 +168,20 @@ Then if you call `library()` with another hash, the app will fail.
 Again, ignore this param if you don't need it. 
 
 ```javascript
-const {library, get_hash} = require('./index.js');
-const golem = library("golem", hash = "blabla")
+var golem = library("golem", hash = "blabla")
 ```
 
 ```
 Uncaught Error: Hash from DESCRIPTION doesn't match specified hash.
+```
+
+```javascript
+var golem = library("golem", hash = 'e2167f289a708b2cd3b774dd9d041b9e4b6d75584b9421185eb8d80ca8af4d8a')
+Object.keys(golem).length
+```
+
+```
+106
 ```
 
 #### `mlibrary`
@@ -221,7 +230,7 @@ b: [1] 56 81 72 36 45
 
 You can launch a shiny app from node and wait for it to be ready (The function wait for the `Listening on` message from Shiny). 
 
-The promise resolves with `{shiny_proc, rawoutput, url}`: `shiny_proc` is the processs object from Node, `rawoutput` is the output buffer, and `url` is the url where the app runs.
+The promise resolves with `{proc, rawoutput, url}`: `proc` is the processs object from Node, `rawoutput` is the output buffer, and `url` is the url where the app runs.
 
 In the example below, each user connecting to `http://host:2811/hexmake` will have access to an instance of the Shiny app. 
 
@@ -267,7 +276,7 @@ app.listen(2811, function () {
 
 #### `install`
 
-`install` creates and install in a local library from a folder (wrapper around `remotes::install_local()`)
+`install` installs from a folder (wrapper around `remotes::install_local()`)
 
 ``` javascript
 const install = require("./index.js")
