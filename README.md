@@ -42,6 +42,17 @@ stats.lm("Sepal.Length ~ Sepal.Width, data = iris").
     catch((err) => console.error(err))
 ```
 
+```
+Promise { <pending> }
+
+Call:
+stats::lm(formula = Sepal.Length ~ Sepal.Width, data = iris)
+
+Coefficients:
+(Intercept)  Sepal.Width  
+     6.5262      -0.2234  
+```
+
 As they are promises, you can use them in an async/await pattern or with `then/catch`
 
 ``` javascript
@@ -69,7 +80,37 @@ const stats = library("stats");
 )();
 ```
 
+```
+Promise { <pending> }
+
+Call:
+stats::lm(formula = Sepal.Length ~ Sepal.Width, data = iris)
+
+Coefficients:
+(Intercept)  Sepal.Width  
+     6.5262      -0.2234  
+
+
+
+Call:
+stats::lm(formula = Sepal.Length ~ Sepal.Width, data = iris)
+
+Coefficients:
+(Intercept)  Sepal.Width  
+     6.5262      -0.2234  
+
+
+
+Call:
+stats::lm(formula = Sepal.Length ~ Petal.Width, data = iris)
+
+Coefficients:
+(Intercept)  Petal.Width  
+     4.7776       0.8886  
+```
+
 Values returned by the `hordes` functions, once in NodeJS, are string values matching the `stdout` of `Rscript`.
+
 If you want to exchange data between R and NodeJS, use an interchangeable format (JSON, arrow, or raw string):
 
 ``` javascript
@@ -92,6 +133,46 @@ const base = library("base");
         }
 }
 )();
+```
+
+```
+Promise { <pending> }
+{
+  'Sepal.Length': 5.1,
+  'Sepal.Width': 3.5,
+  'Petal.Length': 1.4,
+  'Petal.Width': 0.2,
+  Species: 'setosa'
+}
+42
+```
+
+### `get_hash`
+
+When calling `library()` or `mlibrary()`, you can specify a hash, which is compiled the first time with `get_hash`. 
+This has is computed from the `DESCRIPTION` of the package called. 
+That way, if ever the `DESCRIPTION` file changes (version update...), you can get alerted (app won't launch). 
+Just ignore this param if you don't care about that (but you should). 
+
+``` javascript
+const {get_hash} = require('./index.js');
+get_hash("golem")
+```
+
+```
+'e2167f289a708b2cd3b774dd9d041b9e4b6d75584b9421185eb8d80ca8af4d8a'
+```
+
+Then if you call `library()` with another hash, the app will fail.
+Again, ignore this param if you don't need it. 
+
+```javascript
+const {library, get_hash} = require('./index.js');
+const golem = library("golem", hash = "blabla")
+```
+
+```
+Uncaught Error: Hash from DESCRIPTION doesn't match specified hash.
 ```
 
 #### `mlibrary`
@@ -123,6 +204,17 @@ const mbase = mlibrary("base");
         }
 }
 )();
+```
+
+```
+Promise { <pending> }
+> a: [1] 99 97 33 73 93
+
+b: [1] 76 50 27 75 56
+
+a: [1] 56 81 72 36 45
+
+b: [1] 56 81 72 36 45
 ```
 
 #### Shiny and Markdown waiters
