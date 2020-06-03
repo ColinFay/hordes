@@ -5,10 +5,11 @@ R from NodeJS, the right way.
 ## Install
 
 `hordes` is not on npm (yet), so for now you'll need to clone this repo and `require()` the `index.js` file. 
+(But I suppose that if you're reading these lines right now you're probably just here to see what this thing is about, so that's ok)
 
 ## Jump to Examples
 
-Jump straight to examples: 
+Maybe you don't have time to read the background and you just want to jump straight to the examples: 
 
 + [Simple Example](#simple-example)
 + [API using Express](#api-using-express)
@@ -17,17 +18,27 @@ Jump straight to examples:
 
 ## About
 
-`hordes` makes R available from NodeJS, the right way.
+`hordes` makes R available from NodeJS.
 
 The general idea of `hordes` is that NodeJS is the perfect tool when it comes to HTTP i/o, hence we should leverage the strength of this ecosystem to build Web Services that can serve R results. 
 For example, if you have a web service that needs authentification, using `hordes` allows to reuse existing NodeJS modules, which are widely used and tested inside the NodeJS ecosystem, instead of trying to reinvent the wheel.
 Another good example is NodeJS native cluster mode, and external modules like `pm2` which are designed to launch your app in a multicore mode, and also that watches that your app is still running continuously, and relaunches it if one of the process stop (kind of handy for a production application that handle a lot of load). 
+And don't get me started on scaling NodeJS applications.
 
 The philosophy for using `hordes` is that every R function call should be stateless. 
 With this idea in mind, you can build a package where functions are to be considered as 'endpoints' which are then called from NodeJS. 
 In other words, there is no "shared-state" between two calls to R—if you want this to happen, you should either register the values inside Node, save it on disk, or use a database as a backend. 
 
 Examples below will probably make this idea clearer.
+
+### Wait...
+
+> "Wait... but I need to learn a new language?"
+
+Yes. And no. 
+NodeJS has a ton of tutorials online and even if, ther
+
+
 
 ### How to 
 
@@ -348,6 +359,30 @@ const stats = library("stats");
 }
 
 )();
+```
+
+```
+Promise { <pending> }
+>   Sepal.Length Sepal.Width Petal.Length Petal.Width    Species
+1          6.3         2.5          5.0         1.9  virginica
+2          5.1         3.8          1.6         0.2     setosa
+3          6.2         3.4          5.4         2.3  virginica
+4          6.0         2.2          5.0         1.5  virginica
+5          6.0         2.7          5.1         1.6 versicolor
+
+  [1] 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 6 6 6 6 6 6
+ [38] 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 7 7 7 7 7 7 7 7 7 7 7 7 7
+ [75] 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8
+[112] 8 8 8 8 8 8 8 8 8 8 8 8 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9
+[149] 9 9 9 9 9
+
+
+Call:
+stats::lm(formula = Sepal.Length ~ Sepal.Width, data = iris)
+
+Coefficients:
+(Intercept)  Sepal.Width  
+     6.5262      -0.2234 
 ```
 
 #### API using express
