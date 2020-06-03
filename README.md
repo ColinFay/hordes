@@ -2,11 +2,18 @@
 
 R from NodeJS, the right way.
 
+## Install
+
+`hordes` is not on npm (yet), so for now you'll need to clone this repo and `require()` the `index.js` file. 
+
+## Jump to Examples
+
 Jump straight to examples: 
 
 + [Simple Example](#simple-example)
 + [API using Express](#api-using-express)
 + [Serving shiny apps](#serving-shiny-apps)
++ [Serving Shiny App with Load Balancing](#load-balancing-shiny-apps)
 
 ## About
 
