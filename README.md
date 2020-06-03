@@ -12,10 +12,13 @@ Jump straight to examples:
 
 `hordes` makes R available from NodeJS, the right way.
 
-The general philosophy for using `hordes` is that every R function call should be stateless. 
+The general idea of `hordes` is that NodeJS is the perfect tool when it comes to HTTP i/o, hence we should leverage the strength of this ecosystem to build Web Services that can serve R results. 
+For example, if you have a web service that needs authentification, using `hordes` allows to reuse existing NodeJS modules, which are widely used and tested inside the NodeJS ecosystem, instead of trying to reinvent the wheel.
+Another good example is NodeJS native cluster mode, and external modules like `pm2` which are designed to launch your app in a multicore mode, and also that watches that your app is still running continuously, and relaunches it if one of the process stop (kind of handy for a production application that handle a lot of load). 
+
+The philosophy for using `hordes` is that every R function call should be stateless. 
 With this idea in mind, you can build a package where functions are to be considered as 'endpoints' which are then called from NodeJS. 
-In other words, there is no "shared-state" between two calls to R. 
-If you want this to happen, you should either register the values inside Node or save it on disk.
+In other words, there is no "shared-state" between two calls to R—if you want this to happen, you should either register the values inside Node, save it on disk, or use a database as a backend. 
 
 Examples below will probably make this idea clearer.
 
@@ -30,10 +33,12 @@ The `hordes` module contains the following functions:
 For example, `library("stats")` will return an object with all the functions from `{stats}`. 
 By doing `const stats = library("stats");`, you will have access to all the functions from `{stats}`, for example `stats.lm()`. 
 
+> Note that if you want to call functions with dot (for example `as.numeric()`), you should do it using the `[` notation, not the dot one (i.e `base['as.numeric']`, not `base.as.numeric`).
+
 Calling `stats.lm("code")` will launch R, run `stats::lm("code")` and return the output to Node. 
 
 **Note that every function returns a promise, where R `stderr` reject the promise  and `stdout` resolve it.**
-This point is kind of important if you're building your own package that will be then called by `hordes`.
+This point is kind of important if you're building your own package that will be then called through `hordes`.
 
 ``` javascript 
 const {library} = require('./index.js');
@@ -112,7 +117,7 @@ Coefficients:
 
 Values returned by the `hordes` functions, once in NodeJS, are string values matching the `stdout` of `Rscript`.
 
-If you want to exchange data between R and NodeJS, use an interchangeable format (JSON, arrow, or raw string):
+If you want to exchange data between R and NodeJS, use an interchangeable format (JSON, arrow, base64 for images, raw strings...):
 
 ``` javascript
 const {library} = require('./index.js');
@@ -146,42 +151,6 @@ Promise { <pending> }
   Species: 'setosa'
 }
 42
-```
-
-### `get_hash`
-
-When calling `library()` or `mlibrary()`, you can specify a hash, which can be compiled with `get_hash`. 
-This hahs is computed from the `DESCRIPTION` of the package called. 
-That way, if ever the `DESCRIPTION` file changes (version update, or stuff like that...), you can get alerted (app won't launch). 
-Just ignore this param if you don't care about that (but you should). 
-
-``` javascript
-const {library, get_hash} = require('./index.js');
-get_hash("golem")
-```
-
-```
-'e2167f289a708b2cd3b774dd9d041b9e4b6d75584b9421185eb8d80ca8af4d8a'
-```
-
-Then if you call `library()` with another hash, the app will fail.
-Again, ignore this param if you don't need it. 
-
-```javascript
-var golem = library("golem", hash = "blabla")
-```
-
-```
-Uncaught Error: Hash from DESCRIPTION doesn't match specified hash.
-```
-
-```javascript
-var golem = library("golem", hash = 'e2167f289a708b2cd3b774dd9d041b9e4b6d75584b9421185eb8d80ca8af4d8a')
-Object.keys(golem).length
-```
-
-```
-106
 ```
 
 #### `mlibrary`
@@ -226,6 +195,43 @@ a: [1] 56 81 72 36 45
 b: [1] 56 81 72 36 45
 ```
 
+
+### `get_hash`
+
+When calling `library()` or `mlibrary()`, you can specify a hash, which can be compiled with `get_hash`. 
+This hash is computed from the `DESCRIPTION` of the package called. 
+That way, if ever the `DESCRIPTION` file changes (version update, or stuff like that...), you can get alerted (app won't launch). 
+Just ignore this param if you don't care about that (but you should). 
+
+``` javascript
+const {library, get_hash} = require('./index.js');
+get_hash("golem")
+```
+
+```
+'e2167f289a708b2cd3b774dd9d041b9e4b6d75584b9421185eb8d80ca8af4d8a'
+```
+
+Then if you call `library()` with another hash, the app will fail.
+Again, ignore this param if you don't need it. 
+
+```javascript
+var golem = library("golem", hash = "blabla")
+```
+
+```
+Uncaught Error: Hash from DESCRIPTION doesn't match specified hash.
+```
+
+```javascript
+var golem = library("golem", hash = 'e2167f289a708b2cd3b774dd9d041b9e4b6d75584b9421185eb8d80ca8af4d8a')
+Object.keys(golem).length
+```
+
+```
+106
+```
+
 #### Shiny and Markdown waiters
 
 You can launch a shiny app from node and wait for it to be ready (The function wait for the `Listening on` message from Shiny). 
@@ -253,7 +259,7 @@ app.listen(2811, function () {
 })
 ```
 
-You can also do it with Markdown files (here, we have an example of running the app from the Node terminl (hence `${process.cwd()}`, which should be switched to `__dirname` in scripting mode).
+You can also do it with Markdown files (here, we have an example of running the app from the Node terminal (hence `${process.cwd()}`, which should be switched to `__dirname` in scripting mode).
 
 ```javascript
 const {markdown_waiter} = require("./index.js")
@@ -302,7 +308,7 @@ const base = library("base", process = '/usr/local/bin/RScript');
 )();
 ```
 
-### Example
+### Examples
 
 #### Simple example 
 
@@ -452,3 +458,38 @@ app.listen(2811, function () {
 -> http://localhost:2811/hexmake
 
 -> http://localhost:2811/punkapi
+
+#### Load Balancing Shiny Apps 
+
+Here's a small example of a round-robin load balancing technic, where we launch 5 shiny apps and serve them in turn to the users. 
+
+```javascript
+const {shiny_waiter} = require('./index.js');
+const express = require('express');
+const app = express();
+
+const enframe = (port) => {
+    return `<iframe src = 'http://127.0.0.1:${port}' frameborder="0" style="overflow:hidden;" height="100%" width="100%"></iframe>`
+}
+
+(async () => {
+    var port = [2811, 2812, 2813, 2814, 2815]
+    const proms = port.map((x) => {
+        shiny_waiter(`options(shiny.port=${x});hexmake::run_app()`)
+    })
+    await Promise.all(proms);
+    
+    app.get('/hexmake', (req, res) => {
+        var locport = port.shift()
+        console.log(locport)
+        res.send(enframe(locport));
+        port.push(locport)
+    })
+})()
+
+app.listen(2811, function () {
+    console.log('Example app listening on port 2811!')
+})
+```
+
+Now if you open 10 tabs in a browser on `http://localhost:2811/hexmake`, each of the five apps will be served two times, helping to quickly load balance Shiny applications. 
