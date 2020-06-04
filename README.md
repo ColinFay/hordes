@@ -31,14 +31,6 @@ In other words, there is no "shared-state" between two calls to R—if you want 
 
 Examples below will probably make this idea clearer.
 
-### Wait...
-
-> "Wait... but I need to learn a new language?"
-
-Yes. And no. 
-NodeJS has a ton of tutorials online and even if, ther
-
-
 
 ### How to 
 
