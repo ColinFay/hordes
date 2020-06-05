@@ -5,7 +5,7 @@ R from NodeJS, the right way.
 ## Install
 
 `hordes` is not on npm (yet), so for now you'll need to clone this repo and `require()` the `index.js` file. 
-(But I suppose that if you're reading these lines right now you're probably just here to see what this thing is about, so that's ok)
+(But I suppose that if you're reading these lines right now you're probably just here to see what this thing is about, so that's ok :) )
 
 ## Jump to Examples
 
@@ -20,14 +20,15 @@ Maybe you don't have time to read the background and you just want to jump strai
 
 `hordes` makes R available from NodeJS.
 
-The general idea of `hordes` is that NodeJS is the perfect tool when it comes to HTTP i/o, hence we should leverage the strength of this ecosystem to build Web Services that can serve R results. 
-For example, if you have a web service that needs authentification, using `hordes` allows to reuse existing NodeJS modules, which are widely used and tested inside the NodeJS ecosystem, instead of trying to reinvent the wheel.
+The general idea of `hordes` is that NodeJS is the perfect tool when it comes to HTTP i/o, hence we can leverage the strength of this ecosystem to build Web Services that can serve R results. 
+For example, if you have a web service that needs authentification, using `hordes` allows to reuse existing NodeJS modules, which are widely used and tested inside the NodeJS ecosystem.
 Another good example is NodeJS native cluster mode, and external modules like `pm2` which are designed to launch your app in a multicore mode, and also that watches that your app is still running continuously, and relaunches it if one of the process stop (kind of handy for a production application that handle a lot of load). 
+It also makes things easier when it comes to mixing various languages in the same API: for example, you can serve standard html on an endpoint, and R on others. 
 And don't get me started on scaling NodeJS applications.
 
-The philosophy for using `hordes` is that every R function call should be stateless. 
-With this idea in mind, you can build a package where functions are to be considered as 'endpoints' which are then called from NodeJS. 
-In other words, there is no "shared-state" between two calls to R—if you want this to happen, you should either register the values inside Node, save it on disk, or use a database as a backend. 
+From the R point of view, the general idea with `hordes` is that every R function call should be stateless. 
+Keeping this idea in mind, you can build a package where functions are to be considered as 'endpoints' which are then called from NodeJS. 
+In other words, there is no "shared-state" between two calls to R—if you want this to happen, you should either register the values inside Node, save it on disk, or use a database as a backend (which should be the prefered solution if you ask me). 
 
 Examples below will probably make this idea clearer.
 
@@ -47,8 +48,8 @@ By doing `const stats = library("stats");`, you will have access to all the func
 
 Calling `stats.lm("code")` will launch R, run `stats::lm("code")` and return the output to Node. 
 
-**Note that every function returns a promise, where R `stderr` reject the promise  and `stdout` resolve it.**
-This point is kind of important if you're building your own package that will be then called through `hordes`.
+**Note that every function returns a promise, where R `stderr` rejects the promise  and `stdout` resolves it.**
+This point is kind of important to keep in mind if you're building your own package that will be then called through `hordes`.
 
 ``` javascript 
 const {library} = require('./index.js');
@@ -69,7 +70,8 @@ Coefficients:
      6.5262      -0.2234  
 ```
 
-As they are promises, you can use them in an async/await pattern or with `then/catch`
+As they are promises, you can use them in an async/await pattern or with `then/catch`. 
+The rest of this README will use `async/await`
 
 ``` javascript
 const {library} = require('./index.js');
@@ -211,7 +213,7 @@ b: [1] 56 81 72 36 45
 When calling `library()` or `mlibrary()`, you can specify a hash, which can be compiled with `get_hash`. 
 This hash is computed from the `DESCRIPTION` of the package called. 
 That way, if ever the `DESCRIPTION` file changes (version update, or stuff like that...), you can get alerted (app won't launch). 
-Just ignore this param if you don't care about that (but you should). 
+Just ignore this param if you don't care about that (but you should in a production setting). 
 
 ``` javascript
 const {library, get_hash} = require('./index.js');
@@ -223,7 +225,6 @@ get_hash("golem")
 ```
 
 Then if you call `library()` with another hash, the app will fail.
-Again, ignore this param if you don't need it. 
 
 ```javascript
 var golem = library("golem", hash = "blabla")
@@ -244,11 +245,12 @@ Object.keys(golem).length
 
 #### Shiny and Markdown waiters
 
-You can launch a shiny app from node and wait for it to be ready (The function wait for the `Listening on` message from Shiny). 
+You can launch a shiny app from Node and wait for it to be ready. 
+The function wait for the `Listening on` message from Shiny, so be careful not to print that to the console in the launching process (that's very unlikely that you're doing that, but who knows what can happen :) ). 
 
-The promise resolves with `{proc, rawoutput, url}`: `proc` is the processs object from Node, `rawoutput` is the output buffer, and `url` is the url where the app runs.
+The promise resolves with `{proc, rawoutput, url}`: `proc` is the processs object created by Node, `rawoutput` is the output buffer, and `url` is the url where the app runs.
 
-In the example below, each user connecting to `http://host:2811/hexmake` will have access to an instance of the Shiny app. 
+In the example below, each user connecting to `http://host:2811/hexmake` will have access to a different instance of the Shiny app, so it takes a couple of seconds for each user to get access to the endpoint. 
 
 ```javascript
 const {shiny_waiter} = require("./index.js")
@@ -299,7 +301,7 @@ const install = require("./index.js")
 install.install_local("./attempt")
 ```
 
-#### Changing the process that runs R
+### Changing the process that runs R
 
 By default, the R code is launched by `RScript`, but you can specify another (for example if you need another version of R):
 
@@ -414,7 +416,7 @@ app.listen(2811, function () {
 
 #### Serving Shiny Apps 
 
-Note that these methods won't close the Shiny sessions after the node app is closed / when the user close the tab. 
+Note that these methods might not close the Shiny sessions after the node app is closed / when the user close the tab. 
 These are examples that have been trimmed down for the sake of clarity.
 
 When called, the waiters return an object of class [ChildProcess](https://nodejs.org/api/child_process.html#child_process_class_childprocess) as `.proc`, that can be manipulated as such.
@@ -495,7 +497,7 @@ app.listen(2811, function () {
 
 #### Load Balancing Shiny Apps 
 
-Here's a small example of a round-robin load balancing technic, where we launch 5 shiny apps and serve them in turn to the users. 
+Here's a small example of a round-robin load balancing approach, where we launch 5 shiny apps and serve them in turn to the users. 
 
 ```javascript
 const {shiny_waiter} = require('./index.js');
