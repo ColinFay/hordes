@@ -13,8 +13,7 @@ Maybe you don't have time to read the background and you just want to jump strai
 
 + [Simple Example](#simple-example)
 + [API using Express](#api-using-express)
-+ [Serving shiny apps](#serving-shiny-apps)
-+ [Serving Shiny App with Load Balancing](#load-balancing-shiny-apps)
++ [Golem Creator](#golem-creator)
 
 ## About
 
@@ -243,62 +242,49 @@ Object.keys(golem).length
 106
 ```
 
-#### Shiny and Markdown waiters
+#### waiter
 
-You can launch a shiny app from Node and wait for it to be ready. 
-The function wait for the `Listening on` message from Shiny, so be careful not to print that to the console in the launching process (that's very unlikely that you're doing that, but who knows what can happen :) ). 
+You can launch an R process that streams data and wait for a specific output in the stdout. 
 
-The promise resolves with `{proc, rawoutput, url}`: `proc` is the processs object created by Node, `rawoutput` is the output buffer, and `url` is the url where the app runs.
+The promise resolves with and `{proc, raw_output}`: `proc` is the processs object created by Node, `raw_output` is the output buffer, that can be turned to string with `.toString()`.
 
-In the example below, each user connecting to `http://host:2811/hexmake` will have access to a different instance of the Shiny app, so it takes a couple of seconds for each user to get access to the endpoint. 
+A streaming process here is considered in a lose sense: what we mean here is anything that prints various elements to the console. 
+For example, when you create a new application using the `{golem}` package, the app is ready once this last line is printed to the console. 
+This is exactly what `waiter` does, it waits for this last line to be printed to the console.
+
+```r
+> golem::create_golem('pouet')
+-- Checking package name -------------------------------------------------------
+v Valid package name
+-- Creating dir ----------------------------------------------------------------
+v Created package directory
+-- Copying package skeleton ----------------------------------------------------
+v Copied app skeleton
+-- Setting the default config --------------------------------------------------
+v Configured app
+-- Done ------------------------------------------------------------------------
+A new golem named pouet was created at /private/tmp/pouet .
+To continue working on your app, start editing the 01_start.R file.
+```
 
 ```javascript
-const {shiny_waiter} = require("./index.js")
+const {waiter} = require("./index.js")
 const express = require('express');
 const app = express();
 
-app.get('/hexmake', async (req, res) => {
+app.get('/creategolem', async (req, res) => {
     try {
-        let shinyproc = await shiny_waiter("hexmake::run_app()");
-        res.send(`<iframe src = '${shinyproc.url}' frameborder="0" style="overflow:hidden;" height="100%" width="100%"></iframe>`);
-    } catch(e){
-        res.status(500).send("Error launching the Shiny App")
-    }
-})
-
-app.listen(2811, function () {
-  console.log('Example app listening on port 2811!')
-})
-```
-
-You can also do it with Markdown files (here, we have an example of running the app from the Node terminal (hence `${process.cwd()}`, which should be switched to `__dirname` in scripting mode).
-
-```javascript
-const {markdown_waiter} = require("./index.js")
-const app = require('express')();
-
-app.get('/untitled', async (req, res) => {
-    try {
-        let markdown = await markdown_waiter(`rmarkdown::render('${process.cwd()}/Untitled.Rmd', output_file = 'pouet/Untitled.html')`);
-        res.sendFile(`${process.cwd()}/pouet/Untitled.html`);
+        let shinyproc = await waiter("golem::create_golem('pouet')", solve_on = "To continue working on your app");
+        res.send("Created ")
     } catch(e){
         console.log(e)
-        res.status(500).send("Error Rendering the Markdown")
+        res.status(500).send("Error creating the golem project")
     }
 })
 
 app.listen(2811, function () {
   console.log('Example app listening on port 2811!')
 })
-```
-
-#### `install`
-
-`install` installs from a folder (wrapper around `remotes::install_local()`)
-
-``` javascript
-const install = require("./index.js")
-install.install_local("./attempt")
 ```
 
 ### Changing the process that runs R
@@ -414,40 +400,21 @@ app.listen(2811, function () {
 
 -> http://localhost:2811/rnorm?left=10
 
-#### Serving Shiny Apps 
 
-Note that these methods might not close the Shiny sessions after the node app is closed / when the user close the tab. 
-These are examples that have been trimmed down for the sake of clarity.
-
-When called, the waiters return an object of class [ChildProcess](https://nodejs.org/api/child_process.html#child_process_class_childprocess) as `.proc`, that can be manipulated as such.
-
-+ One per user
+### Golem Creator
 
 ```javascript
-const {shiny_waiter} = require('./index.js');
+const {waiter} = require("./index.js")
 const express = require('express');
 const app = express();
 
-const enframe = (url) => {
-    return `<iframe src = '${url}' frameborder="0" style="overflow:hidden;" height="100%" width="100%"></iframe>`
-}
-
-app.get('/hexmake', async (req, res) => {
+app.get('/creategolem', async (req, res) => {
     try {
-        let shinyproc = await shiny_waiter("hexmake::run_app()");
-        res.send(enframe(shinyproc.url));
+        let shinyproc = await waiter(`golem::create_golem('${req.query.name}')`, solve_on = "To continue working on your app");
+        res.send("Created ")
     } catch(e){
-        res.status(500).send("Error launching the Shiny App")
-    }
-})
-
-
-app.get('/punkapi', async (req, res) => {
-    try {
-        let shinyproc = await shiny_waiter("punkapi::run_app()");
-       res.send(enframe(shinyproc.url));
-    } catch(e){
-        res.status(500).send("Error launching the Shiny App")
+        console.log(e)
+        res.status(500).send("Error creating the golem project")
     }
 })
 
@@ -456,76 +423,4 @@ app.listen(2811, function () {
 })
 ```
 
--> http://localhost:2811/hexmake
-
--> http://localhost:2811/punkapi
-
-+ Same app for all users
-
-```javascript
-const {shiny_waiter} = require('./index.js');
-const express = require('express');
-const app = express();
-
-const enframe = (url) => {
-    return `<iframe src = '${url}' frameborder="0" style="overflow:hidden;" height="100%" width="100%"></iframe>`
-}
-
-(async () => {
-    const a = shiny_waiter("hexmake::run_app()");
-    const b = shiny_waiter("punkapi::run_app()");
-    const ab = await Promise.all([a, b]);
-    
-    app.get('/hexmake', (req, res) => {
-        res.send(enframe(ab[0].url));
-    })
-
-    app.get('/punkapi', (req, res) => {
-        res.send(enframe(ab[1].url));
-    })
-})()
-
-app.listen(2811, function () {
-    console.log('Example app listening on port 2811!')
-})
-
-```
-
--> http://localhost:2811/hexmake
-
--> http://localhost:2811/punkapi
-
-#### Load Balancing Shiny Apps 
-
-Here's a small example of a round-robin load balancing approach, where we launch 5 shiny apps and serve them in turn to the users. 
-
-```javascript
-const {shiny_waiter} = require('./index.js');
-const express = require('express');
-const app = express();
-
-const enframe = (port) => {
-    return `<iframe src = 'http://127.0.0.1:${port}' frameborder="0" style="overflow:hidden;" height="100%" width="100%"></iframe>`
-}
-
-(async () => {
-    var port = [2811, 2812, 2813, 2814, 2815]
-    const proms = port.map((x) => {
-        shiny_waiter(`options(shiny.port=${x});hexmake::run_app()`)
-    })
-    await Promise.all(proms);
-    
-    app.get('/hexmake', (req, res) => {
-        var locport = port.shift()
-        console.log(locport)
-        res.send(enframe(locport));
-        port.push(locport)
-    })
-})()
-
-app.listen(2811, function () {
-    console.log('Example app listening on port 2811!')
-})
-```
-
-Now if you open 10 tabs in a browser on `http://localhost:2811/hexmake`, each of the five apps will be served two times, helping to quickly load balance Shiny applications. 
+-> http://localhost:2811/creategolem?name=coucou
