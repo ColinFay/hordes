@@ -242,7 +242,7 @@ Object.keys(golem).length
 106
 ```
 
-#### waiter
+#### `waiter`
 
 You can launch an R process that streams data and wait for a specific output in the stdout. 
 
