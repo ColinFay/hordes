@@ -250,7 +250,7 @@ The promise resolves with and `{proc, raw_output}`: `proc` is the processs objec
 
 A streaming process here is considered in a lose sense: what we mean here is anything that prints various elements to the console. 
 For example, when you create a new application using the `{golem}` package, the app is ready once this last line is printed to the console. 
-This is exactly what `waiter` does, it waits for this last line to be printed to the console.
+This is exactly what `waiter` does, it waits for this last line to be printed to the R stdout before resolving.
 
 ```r
 > golem::create_golem('pouet')
