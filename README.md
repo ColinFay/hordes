@@ -274,7 +274,7 @@ const app = express();
 
 app.get('/creategolem', async (req, res) => {
     try {
-        let shinyproc = await waiter("golem::create_golem('pouet')", solve_on = "To continue working on your app");
+        await waiter("golem::create_golem('pouet')", solve_on = "To continue working on your app");
         res.send("Created ")
     } catch(e){
         console.log(e)
@@ -410,7 +410,7 @@ const app = express();
 
 app.get('/creategolem', async (req, res) => {
     try {
-        let shinyproc = await waiter(`golem::create_golem('${req.query.name}')`, solve_on = "To continue working on your app");
+        await waiter(`golem::create_golem('${req.query.name}')`, solve_on = "To continue working on your app");
         res.send("Created ")
     } catch(e){
         console.log(e)
