@@ -4,8 +4,11 @@ R from NodeJS, the right way.
 
 ## Install
 
-`hordes` is not on npm (yet), so for now you'll need to clone this repo and `require()` the `index.js` file. 
-(But I suppose that if you're reading these lines right now you're probably just here to see what this thing is about, so that's ok :) )
+`hordes` can be installed from npm with
+
+```
+npm install hordes
+```
 
 ## Jump to Examples
 
@@ -51,7 +54,7 @@ Calling `stats.lm("code")` will launch R, run `stats::lm("code")` and return the
 This point is kind of important to keep in mind if you're building your own package that will be then called through `hordes`.
 
 ``` javascript 
-const {library} = require('./index.js');
+const {library} = require('hordes');
 const stats = library(pak = "stats");
 stats.lm("Sepal.Length ~ Sepal.Width, data = iris").
     then((e) => console.log(e)).
@@ -59,8 +62,6 @@ stats.lm("Sepal.Length ~ Sepal.Width, data = iris").
 ```
 
 ```
-Promise { <pending> }
-
 Call:
 stats::lm(formula = Sepal.Length ~ Sepal.Width, data = iris)
 
@@ -73,33 +74,30 @@ As they are promises, you can use them in an async/await pattern or with `then/c
 The rest of this README will use `async/await`
 
 ``` javascript
-const {library} = require('./index.js');
+const { library } = require('hordes');
 const stats = library("stats");
 
-(async () => {
+(async() => {
     try {
-            const a = await stats.lm("Sepal.Length ~ Sepal.Width, data = iris")
-            console.log(a)
-        } catch(e){
-            console.log(e)
-        }
-    
+        const a = await stats.lm("Sepal.Length ~ Sepal.Width, data = iris")
+        console.log(a)
+    } catch (e) {
+        console.log(e)
+    }
+
     try {
-            const a = stats.lm("Sepal.Length ~ Sepal.Width, data = iris")
-            const b = stats.lm("Sepal.Length ~ Petal.Width, data = iris")
-            const ab = await Promise.all([a, b])
-            console.log(ab[0])
-            console.log(ab[1])
-        } catch(e){
-            console.log(e)
-        }
-}
-)();
+        const a = stats.lm("Sepal.Length ~ Sepal.Width, data = iris")
+        const b = stats.lm("Sepal.Length ~ Petal.Width, data = iris")
+        const ab = await Promise.all([a, b])
+        console.log(ab[0])
+        console.log(ab[1])
+    } catch (e) {
+        console.log(e)
+    }
+})();
 ```
 
 ```
-Promise { <pending> }
-
 Call:
 stats::lm(formula = Sepal.Length ~ Sepal.Width, data = iris)
 
@@ -123,7 +121,7 @@ stats::lm(formula = Sepal.Length ~ Petal.Width, data = iris)
 
 Coefficients:
 (Intercept)  Petal.Width  
-     4.7776       0.8886  
+     4.7776       0.8886 
 ```
 
 Values returned by the `hordes` functions, once in NodeJS, are string values matching the `stdout` of `Rscript`.
@@ -131,7 +129,7 @@ Values returned by the `hordes` functions, once in NodeJS, are string values mat
 If you want to exchange data between R and NodeJS, use an interchangeable format (JSON, arrow, base64 for images, raw strings...):
 
 ``` javascript
-const {library} = require('./index.js');
+const {library} = require('hordes');
 const jsonlite = library("jsonlite");
 const base = library("base");
 
@@ -153,7 +151,6 @@ const base = library("base");
 ```
 
 ```
-Promise { <pending> }
 {
   'Sepal.Length': 5.1,
   'Sepal.Width': 3.5,
@@ -169,7 +166,7 @@ Promise { <pending> }
 `mlibrary` does the same job as `library` except the functions are natively memoized. 
 
 ``` javascript
-const {library, mlibrary} = require('./index.js');
+const {library, mlibrary} = require('hordes');
 const base = library("base");
 const mbase = mlibrary("base");
 
@@ -196,14 +193,13 @@ const mbase = mlibrary("base");
 ```
 
 ```
-Promise { <pending> }
-> a: [1] 99 97 33 73 93
+a: [1] 49 13 37 25 91
 
-b: [1] 76 50 27 75 56
+b: [1]  5 17 68 26 29
 
-a: [1] 56 81 72 36 45
+a: [1] 96 17  6  4 75
 
-b: [1] 56 81 72 36 45
+b: [1] 96 17  6  4 75
 ```
 
 
@@ -215,12 +211,12 @@ That way, if ever the `DESCRIPTION` file changes (version update, or stuff like 
 Just ignore this param if you don't care about that (but you should in a production setting). 
 
 ``` javascript
-const {library, get_hash} = require('./index.js');
-get_hash("golem")
+const { library, get_hash } = require('hordes');
+console.log(get_hash("golem"))
 ```
 
 ```
-'e2167f289a708b2cd3b774dd9d041b9e4b6d75584b9421185eb8d80ca8af4d8a'
+'fdfe0166629045e6ae8f7ada9d9ca821742e8135efec62bc2226cf0811f44ef3'
 ```
 
 Then if you call `library()` with another hash, the app will fail.
@@ -230,7 +226,7 @@ var golem = library("golem", hash = "blabla")
 ```
 
 ```
-Uncaught Error: Hash from DESCRIPTION doesn't match specified hash.
+            throw new Error("Hash from DESCRIPTION doesn't match specified hash.")
 ```
 
 ```javascript
@@ -239,7 +235,7 @@ Object.keys(golem).length
 ```
 
 ```
-106
+104
 ```
 
 #### `waiter`
@@ -268,42 +264,43 @@ To continue working on your app, start editing the 01_start.R file.
 ```
 
 ```javascript
-const {waiter} = require("./index.js")
+const { waiter } = require("hordes")
 const express = require('express');
 const app = express();
 
-app.get('/creategolem', async (req, res) => {
+app.get('/creategolem', async(req, res) => {
     try {
         await waiter("golem::create_golem('pouet')", solve_on = "To continue working on your app");
         res.send("Created ")
-    } catch(e){
+    } catch (e) {
         console.log(e)
         res.status(500).send("Error creating the golem project")
     }
 })
 
-app.listen(2811, function () {
-  console.log('Example app listening on port 2811!')
+app.listen(2811, function() {
+    console.log('Example app listening on port 2811!')
 })
 ```
+
+-> http://localhost:2811/creategolem
 
 ### Changing the process that runs R
 
 By default, the R code is launched by `RScript`, but you can specify another (for example if you need another version of R):
 
 ``` javascript
-const {library} = require('./index.js');
-const base = library("base", process = '/usr/local/bin/RScript');
+const { library } = require('hordes');
+const base = library("base", hash = null, process = '/usr/local/bin/RScript');
 
-(async () => {
+(async() => {
     try {
-            const a = await base.sample("1:100, 5")
-            console.log("a:", a)
-        } catch(e){
-            console.log(e)
-        }
-}
-)();
+        const a = await base.sample("1:100, 5")
+        console.log("a:", a)
+    } catch (e) {
+        console.log(e)
+    }
+})();
 ```
 
 ### Examples
@@ -311,44 +308,43 @@ const base = library("base", process = '/usr/local/bin/RScript');
 #### Simple example 
 
 ``` javascript 
-const {library} = require('./index.js');
+const { library } = require('hordes');
 const dplyr = library("dplyr");
 const stats = library("stats");
 
-(async () => {
-    try {
-        const sample = await dplyr.sample_n("iris, 5")
-        console.log(sample)
-    } catch(e){
-        console.log(e)
-    }
+(async() => {
+        try {
+            const sample = await dplyr.sample_n("iris, 5")
+            console.log(sample)
+        } catch (e) {
+            console.log(e)
+        }
 
-    try {
-        const pull = await dplyr.pull("airquality, Month")
-        console.log(pull)
-    } catch(e){
-        console.log(e)
-    }
+        try {
+            const pull = await dplyr.pull("airquality, Month")
+            console.log(pull)
+        } catch (e) {
+            console.log(e)
+        }
 
-    try {
-        const lm = await stats.lm("Sepal.Length ~ Sepal.Width, data = iris")
-        console.log(lm)
-    } catch(e){
-        console.log(e)
+        try {
+            const lm = await stats.lm("Sepal.Length ~ Sepal.Width, data = iris")
+            console.log(lm)
+        } catch (e) {
+            console.log(e)
+        }
     }
-}
 
 )();
 ```
 
 ```
-Promise { <pending> }
->   Sepal.Length Sepal.Width Petal.Length Petal.Width    Species
-1          6.3         2.5          5.0         1.9  virginica
-2          5.1         3.8          1.6         0.2     setosa
-3          6.2         3.4          5.4         2.3  virginica
-4          6.0         2.2          5.0         1.5  virginica
-5          6.0         2.7          5.1         1.6 versicolor
+  Sepal.Length Sepal.Width Petal.Length Petal.Width    Species
+1          5.7         3.8          1.7         0.3     setosa
+2          6.7         2.5          5.8         1.8  virginica
+3          6.9         3.1          5.1         2.3  virginica
+4          6.4         2.9          4.3         1.3 versicolor
+5          5.1         3.3          1.7         0.5     setosa
 
   [1] 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 6 6 6 6 6 6
  [38] 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 7 7 7 7 7 7 7 7 7 7 7 7 7
@@ -362,37 +358,37 @@ stats::lm(formula = Sepal.Length ~ Sepal.Width, data = iris)
 
 Coefficients:
 (Intercept)  Sepal.Width  
-     6.5262      -0.2234 
+     6.5262      -0.2234  
 ```
 
 #### API using express
 
 ``` javascript
 const express = require('express');
-const {library} = require('./index.js');
+const { library } = require('hordes');
 const app = express();
 const stats = library("stats");
 
-app.get('/lm', async (req, res) => {
+app.get('/lm', async(req, res) => {
     try {
         const output = await stats.lm(`${req.query.left} ~ ${req.query.right}`)
-        res.send( '<pre>' + output + '</pre>' )
-    } catch(e){
+        res.send('<pre>' + output + '</pre>')
+    } catch (e) {
         res.status(500).send(e)
     }
 })
 
-app.get('/rnorm', async (req, res) => {
+app.get('/rnorm', async(req, res) => {
     try {
         const output = await stats.rnorm(req.query.left)
-        res.send( '<pre>' + output + '</pre>' )
-    } catch(e) {
+        res.send('<pre>' + output + '</pre>')
+    } catch (e) {
         res.status(500).send(e)
     }
 })
 
-app.listen(2811, function () {
-  console.log('Example app listening on port 2811!')
+app.listen(2811, function() {
+    console.log('Example app listening on port 2811!')
 })
 ```
 
@@ -404,22 +400,22 @@ app.listen(2811, function () {
 ### Golem Creator
 
 ```javascript
-const {waiter} = require("./index.js")
+const { waiter } = require("hordes")
 const express = require('express');
 const app = express();
 
-app.get('/creategolem', async (req, res) => {
+app.get('/creategolem', async(req, res) => {
     try {
         await waiter(`golem::create_golem('${req.query.name}')`, solve_on = "To continue working on your app");
         res.send("Created ")
-    } catch(e){
+    } catch (e) {
         console.log(e)
         res.status(500).send("Error creating the golem project")
     }
 })
 
-app.listen(2811, function () {
-  console.log('Example app listening on port 2811!')
+app.listen(2811, function() {
+    console.log('Example app listening on port 2811!')
 })
 ```
 
