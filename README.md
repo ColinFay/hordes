@@ -23,7 +23,7 @@ Maybe you don't have time to read the background and you just want to jump strai
 `hordes` makes R available from NodeJS.
 
 The general idea of `hordes` is that NodeJS is the perfect tool when it comes to HTTP i/o, hence we can leverage the strength of this ecosystem to build Web Services that can serve R results. 
-For example, if you have a web service that needs authentification, using `hordes` allows to reuse existing NodeJS modules, which are widely used and tested inside the NodeJS ecosystem.
+For example, if you have a web service that needs authentication, using `hordes` allows to reuse existing NodeJS modules, which are widely used and tested inside the NodeJS ecosystem.
 Another good example is NodeJS native cluster mode, and external modules like `pm2` which are designed to launch your app in a multicore mode, and also that watches that your app is still running continuously, and relaunches it if one of the process stop (kind of handy for a production application that handle a lot of load). 
 It also makes things easier when it comes to mixing various languages in the same API: for example, you can serve standard html on an endpoint, and R on others. 
 And don't get me started on scaling NodeJS applications.
