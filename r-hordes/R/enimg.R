@@ -26,12 +26,14 @@ base64_img <- function(expr){
 
 #' @export
 #' @rdname en_img
-path_img <- function(expr){
+base64_img_ggplot <- function(plot, ...){
   x <- tempfile(fileext = ".png")
-  png(filename = x)
-  force(expr)
-  dev.off()
-  cat(x)
+  if (silent_requireNamespace("ggplot2")){
+    ggplot2::ggsave(filename = x, plot = plot, ...)
+    cat(base64enc::base64encode(x))
+  } else {
+    stop("`en_img_ggplot()` requires {ggplot2}")
+  }
 }
 
 silent_requireNamespace <- attempt::without_message(requireNamespace)

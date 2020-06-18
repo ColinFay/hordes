@@ -2,12 +2,12 @@
 % Please edit documentation in R/enimg.R
 \name{base64_img}
 \alias{base64_img}
-\alias{path_img}
+\alias{base64_img_ggplot}
 \title{Image to base 64}
 \usage{
 base64_img(expr)
 
-path_img(expr)
+base64_img_ggplot(plot, ...)
 }
 \arguments{
 \item{expr}{}
