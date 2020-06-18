@@ -3,42 +3,43 @@ const memoization = require('fast-memoize')
 const crypto = require('crypto');
 
 const library_mother = (pak, hash, process = 'Rscript', memoized = false) => {
-    if (hash !== null){
+    if (hash !== null) {
         let hash_got = get_hash(pak, process)
-        if (hash_got !== hash){
+        if (hash_got !== hash) {
             throw new Error("Hash from DESCRIPTION doesn't match specified hash.")
         }
     }
     var code = `cat(paste0('"', names(loadNamespace("${pak}")),'"', collapse = ","))`
     let funs = child_process.spawnSync(
-        process, 
-        ['-e', 
+        process, ['-e',
             code
         ]
     );
-    funs =  JSON.parse(`[${funs.stdout.toString()}]`);
+    funs = JSON.parse(`[${funs.stdout.toString()}]`);
     functions_ = {};
 
     funs.map((fun) => {
-        functions_[fun] = function(code, options = {}){
-
-            return new Promise(function (resolve, reject) {
+        functions_[fun] = function(code, options = {}) {
+            if (code === undefined) {
+                code = ""
+            }
+            return new Promise(function(resolve, reject) {
                 child_process.exec(
-                    `${process} --vanilla -e '${pak}::${fun}(${code})'`, 
+                    `${process} --vanilla -e '${pak}::${fun}(${code})'`,
                     options,
                     (error, stdout, stderr) => {
                         if (error) {
                             reject(error)
-                          }
-                        if (stderr){
+                        }
+                        if (stderr) {
                             reject(stderr)
                         }
                         resolve(stdout)
                     }
-            );
+                );
             });
         };
-        if (memoized){
+        if (memoized) {
             functions_[fun] = memoization(functions_[fun])
         }
     })
@@ -57,8 +58,7 @@ const get_hash = (package, process = 'Rscript') => {
     let sha = crypto.createHash('sha256');
     var code = `packageDescription("${package}")`
     let desc = child_process.spawnSync(
-        process, 
-        ['-e', 
+        process, ['-e',
             code
         ]
     );
