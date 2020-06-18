@@ -24,7 +24,7 @@
 <meta name="author" content="Colin Fay" />
 
 
-<meta name="date" content="2020-06-18" />
+<meta name="date" content="2020-06-19" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -147,12 +147,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="2.3" data-path="intro.html"><a href="intro.html#general-infrastructure-consideration"><i class="fa fa-check"></i><b>2.3</b> General infrastructure consideration</a></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="data-exchange.html"><a href="data-exchange.html"><i class="fa fa-check"></i><b>3</b> Data Exchange</a><ul>
-<li class="chapter" data-level="3.1" data-path="data-exchange.html"><a href="data-exchange.html#json"><i class="fa fa-check"></i><b>3.1</b> JSON</a></li>
-<li class="chapter" data-level="3.2" data-path="data-exchange.html"><a href="data-exchange.html#text"><i class="fa fa-check"></i><b>3.2</b> Text</a></li>
-<li class="chapter" data-level="3.3" data-path="data-exchange.html"><a href="data-exchange.html#base64-images"><i class="fa fa-check"></i><b>3.3</b> Base64 images</a></li>
-<li class="chapter" data-level="3.4" data-path="data-exchange.html"><a href="data-exchange.html#files-paths"><i class="fa fa-check"></i><b>3.4</b> Files &amp; Paths</a></li>
-<li class="chapter" data-level="3.5" data-path="data-exchange.html"><a href="data-exchange.html#arrow"><i class="fa fa-check"></i><b>3.5</b> Arrow</a></li>
-<li class="chapter" data-level="3.6" data-path="data-exchange.html"><a href="data-exchange.html#stream"><i class="fa fa-check"></i><b>3.6</b> Stream</a></li>
+<li class="chapter" data-level="3.1" data-path="data-exchange.html"><a href="data-exchange.html#the-hordes-r-package"><i class="fa fa-check"></i><b>3.1</b> The <code>hordes</code> R package</a></li>
+<li class="chapter" data-level="3.2" data-path="data-exchange.html"><a href="data-exchange.html#json"><i class="fa fa-check"></i><b>3.2</b> JSON</a></li>
+<li class="chapter" data-level="3.3" data-path="data-exchange.html"><a href="data-exchange.html#text"><i class="fa fa-check"></i><b>3.3</b> Text</a></li>
+<li class="chapter" data-level="3.4" data-path="data-exchange.html"><a href="data-exchange.html#base64-images"><i class="fa fa-check"></i><b>3.4</b> Base64 images</a></li>
+<li class="chapter" data-level="3.5" data-path="data-exchange.html"><a href="data-exchange.html#files-paths"><i class="fa fa-check"></i><b>3.5</b> Files &amp; Paths</a></li>
+<li class="chapter" data-level="3.6" data-path="data-exchange.html"><a href="data-exchange.html#arrow"><i class="fa fa-check"></i><b>3.6</b> Arrow</a></li>
+<li class="chapter" data-level="3.7" data-path="data-exchange.html"><a href="data-exchange.html#stream"><i class="fa fa-check"></i><b>3.7</b> Stream</a></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="building-a-rest-api.html"><a href="building-a-rest-api.html"><i class="fa fa-check"></i><b>4</b> Building a REST API</a><ul>
 <li class="chapter" data-level="4.1" data-path="building-a-rest-api.html"><a href="building-a-rest-api.html#rest-api-101"><i class="fa fa-check"></i><b>4.1</b> REST API 101</a><ul>
@@ -197,32 +198,32 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <div id="example" class="section level3">
 <h3><span class="header-section-number">4.1.2</span> Example</h3>
-<div class="sourceCode" id="cb21"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb21-1"><a href="building-a-rest-api.html#cb21-1"></a><span class="kw">const</span> express <span class="op">=</span> <span class="at">require</span>(<span class="st">&#39;express&#39;</span>)<span class="op">;</span></span>
-<span id="cb21-2"><a href="building-a-rest-api.html#cb21-2"></a><span class="kw">const</span> <span class="op">{</span>library<span class="op">}</span> <span class="op">=</span> <span class="at">require</span>(<span class="st">&#39;./index.js&#39;</span>)<span class="op">;</span></span>
-<span id="cb21-3"><a href="building-a-rest-api.html#cb21-3"></a><span class="kw">const</span> app <span class="op">=</span> <span class="at">express</span>()<span class="op">;</span></span>
-<span id="cb21-4"><a href="building-a-rest-api.html#cb21-4"></a><span class="kw">const</span> stats <span class="op">=</span> <span class="at">library</span>(<span class="st">&quot;stats&quot;</span>)<span class="op">;</span></span>
-<span id="cb21-5"><a href="building-a-rest-api.html#cb21-5"></a></span>
-<span id="cb21-6"><a href="building-a-rest-api.html#cb21-6"></a><span class="va">app</span>.<span class="at">get</span>(<span class="st">&#39;/iris&#39;</span><span class="op">,</span> <span class="kw">async</span> (req<span class="op">,</span> res) <span class="kw">=&gt;</span> <span class="op">{</span></span>
-<span id="cb21-7"><a href="building-a-rest-api.html#cb21-7"></a>    <span class="cf">try</span> <span class="op">{</span></span>
-<span id="cb21-8"><a href="building-a-rest-api.html#cb21-8"></a>        <span class="kw">const</span> output <span class="op">=</span> <span class="cf">await</span> <span class="va">jsonlite</span>.<span class="at">toJSON</span>(<span class="st">&quot;iris&quot;</span>)</span>
-<span id="cb21-9"><a href="building-a-rest-api.html#cb21-9"></a>        <span class="va">res</span>.<span class="at">send</span>( output )</span>
-<span id="cb21-10"><a href="building-a-rest-api.html#cb21-10"></a>    <span class="op">}</span> <span class="cf">catch</span>(e)<span class="op">{</span></span>
-<span id="cb21-11"><a href="building-a-rest-api.html#cb21-11"></a>        <span class="va">res</span>.<span class="at">status</span>(<span class="dv">500</span>).<span class="at">send</span>(e)</span>
-<span id="cb21-12"><a href="building-a-rest-api.html#cb21-12"></a>    <span class="op">}</span></span>
-<span id="cb21-13"><a href="building-a-rest-api.html#cb21-13"></a><span class="op">}</span>)</span>
-<span id="cb21-14"><a href="building-a-rest-api.html#cb21-14"></a></span>
-<span id="cb21-15"><a href="building-a-rest-api.html#cb21-15"></a><span class="va">app</span>.<span class="at">get</span>(<span class="st">&#39;/mtcars&#39;</span><span class="op">,</span> <span class="kw">async</span> (req<span class="op">,</span> res) <span class="kw">=&gt;</span> <span class="op">{</span></span>
-<span id="cb21-16"><a href="building-a-rest-api.html#cb21-16"></a>    <span class="cf">try</span> <span class="op">{</span></span>
-<span id="cb21-17"><a href="building-a-rest-api.html#cb21-17"></a>        <span class="kw">const</span> output <span class="op">=</span> <span class="cf">await</span> <span class="va">jsonlite</span>.<span class="at">toJSON</span>(<span class="st">&quot;mtcars&quot;</span>)</span>
-<span id="cb21-18"><a href="building-a-rest-api.html#cb21-18"></a>        <span class="va">res</span>.<span class="at">send</span>( output )</span>
-<span id="cb21-19"><a href="building-a-rest-api.html#cb21-19"></a>    <span class="op">}</span> <span class="cf">catch</span>(e) <span class="op">{</span></span>
-<span id="cb21-20"><a href="building-a-rest-api.html#cb21-20"></a>        <span class="va">res</span>.<span class="at">status</span>(<span class="dv">500</span>).<span class="at">send</span>(e)</span>
-<span id="cb21-21"><a href="building-a-rest-api.html#cb21-21"></a>    <span class="op">}</span></span>
-<span id="cb21-22"><a href="building-a-rest-api.html#cb21-22"></a><span class="op">}</span>)</span>
-<span id="cb21-23"><a href="building-a-rest-api.html#cb21-23"></a></span>
-<span id="cb21-24"><a href="building-a-rest-api.html#cb21-24"></a><span class="va">app</span>.<span class="at">listen</span>(<span class="dv">2811</span><span class="op">,</span> <span class="kw">function</span> () <span class="op">{</span></span>
-<span id="cb21-25"><a href="building-a-rest-api.html#cb21-25"></a>  <span class="va">console</span>.<span class="at">log</span>(<span class="st">&#39;Example app listening on port 2811!&#39;</span>)</span>
-<span id="cb21-26"><a href="building-a-rest-api.html#cb21-26"></a><span class="op">}</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb24"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb24-1"><a href="building-a-rest-api.html#cb24-1"></a><span class="kw">const</span> express <span class="op">=</span> <span class="at">require</span>(<span class="st">&#39;express&#39;</span>)<span class="op">;</span></span>
+<span id="cb24-2"><a href="building-a-rest-api.html#cb24-2"></a><span class="kw">const</span> <span class="op">{</span>library<span class="op">}</span> <span class="op">=</span> <span class="at">require</span>(<span class="st">&#39;hordes&#39;</span>)<span class="op">;</span></span>
+<span id="cb24-3"><a href="building-a-rest-api.html#cb24-3"></a><span class="kw">const</span> app <span class="op">=</span> <span class="at">express</span>()<span class="op">;</span></span>
+<span id="cb24-4"><a href="building-a-rest-api.html#cb24-4"></a><span class="kw">const</span> stats <span class="op">=</span> <span class="at">library</span>(<span class="st">&quot;stats&quot;</span>)<span class="op">;</span></span>
+<span id="cb24-5"><a href="building-a-rest-api.html#cb24-5"></a></span>
+<span id="cb24-6"><a href="building-a-rest-api.html#cb24-6"></a><span class="va">app</span>.<span class="at">get</span>(<span class="st">&#39;/iris&#39;</span><span class="op">,</span> <span class="kw">async</span> (req<span class="op">,</span> res) <span class="kw">=&gt;</span> <span class="op">{</span></span>
+<span id="cb24-7"><a href="building-a-rest-api.html#cb24-7"></a>    <span class="cf">try</span> <span class="op">{</span></span>
+<span id="cb24-8"><a href="building-a-rest-api.html#cb24-8"></a>        <span class="kw">const</span> output <span class="op">=</span> <span class="cf">await</span> <span class="va">jsonlite</span>.<span class="at">toJSON</span>(<span class="st">&quot;iris&quot;</span>)</span>
+<span id="cb24-9"><a href="building-a-rest-api.html#cb24-9"></a>        <span class="va">res</span>.<span class="at">send</span>( output )</span>
+<span id="cb24-10"><a href="building-a-rest-api.html#cb24-10"></a>    <span class="op">}</span> <span class="cf">catch</span>(e)<span class="op">{</span></span>
+<span id="cb24-11"><a href="building-a-rest-api.html#cb24-11"></a>        <span class="va">res</span>.<span class="at">status</span>(<span class="dv">500</span>).<span class="at">send</span>(e)</span>
+<span id="cb24-12"><a href="building-a-rest-api.html#cb24-12"></a>    <span class="op">}</span></span>
+<span id="cb24-13"><a href="building-a-rest-api.html#cb24-13"></a><span class="op">}</span>)</span>
+<span id="cb24-14"><a href="building-a-rest-api.html#cb24-14"></a></span>
+<span id="cb24-15"><a href="building-a-rest-api.html#cb24-15"></a><span class="va">app</span>.<span class="at">get</span>(<span class="st">&#39;/mtcars&#39;</span><span class="op">,</span> <span class="kw">async</span> (req<span class="op">,</span> res) <span class="kw">=&gt;</span> <span class="op">{</span></span>
+<span id="cb24-16"><a href="building-a-rest-api.html#cb24-16"></a>    <span class="cf">try</span> <span class="op">{</span></span>
+<span id="cb24-17"><a href="building-a-rest-api.html#cb24-17"></a>        <span class="kw">const</span> output <span class="op">=</span> <span class="cf">await</span> <span class="va">jsonlite</span>.<span class="at">toJSON</span>(<span class="st">&quot;mtcars&quot;</span>)</span>
+<span id="cb24-18"><a href="building-a-rest-api.html#cb24-18"></a>        <span class="va">res</span>.<span class="at">send</span>( output )</span>
+<span id="cb24-19"><a href="building-a-rest-api.html#cb24-19"></a>    <span class="op">}</span> <span class="cf">catch</span>(e) <span class="op">{</span></span>
+<span id="cb24-20"><a href="building-a-rest-api.html#cb24-20"></a>        <span class="va">res</span>.<span class="at">status</span>(<span class="dv">500</span>).<span class="at">send</span>(e)</span>
+<span id="cb24-21"><a href="building-a-rest-api.html#cb24-21"></a>    <span class="op">}</span></span>
+<span id="cb24-22"><a href="building-a-rest-api.html#cb24-22"></a><span class="op">}</span>)</span>
+<span id="cb24-23"><a href="building-a-rest-api.html#cb24-23"></a></span>
+<span id="cb24-24"><a href="building-a-rest-api.html#cb24-24"></a><span class="va">app</span>.<span class="at">listen</span>(<span class="dv">2811</span><span class="op">,</span> <span class="kw">function</span> () <span class="op">{</span></span>
+<span id="cb24-25"><a href="building-a-rest-api.html#cb24-25"></a>  <span class="va">console</span>.<span class="at">log</span>(<span class="st">&#39;Example app listening on port 2811!&#39;</span>)</span>
+<span id="cb24-26"><a href="building-a-rest-api.html#cb24-26"></a><span class="op">}</span>)</span></code></pre></div>
 </div>
 </div>
 <div id="rest-api-design-pattern-with-hordes" class="section level2">

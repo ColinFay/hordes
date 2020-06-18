@@ -24,7 +24,7 @@
 <meta name="author" content="Colin Fay" />
 
 
-<meta name="date" content="2020-06-18" />
+<meta name="date" content="2020-06-19" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -147,12 +147,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="2.3" data-path="intro.html"><a href="intro.html#general-infrastructure-consideration"><i class="fa fa-check"></i><b>2.3</b> General infrastructure consideration</a></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="data-exchange.html"><a href="data-exchange.html"><i class="fa fa-check"></i><b>3</b> Data Exchange</a><ul>
-<li class="chapter" data-level="3.1" data-path="data-exchange.html"><a href="data-exchange.html#json"><i class="fa fa-check"></i><b>3.1</b> JSON</a></li>
-<li class="chapter" data-level="3.2" data-path="data-exchange.html"><a href="data-exchange.html#text"><i class="fa fa-check"></i><b>3.2</b> Text</a></li>
-<li class="chapter" data-level="3.3" data-path="data-exchange.html"><a href="data-exchange.html#base64-images"><i class="fa fa-check"></i><b>3.3</b> Base64 images</a></li>
-<li class="chapter" data-level="3.4" data-path="data-exchange.html"><a href="data-exchange.html#files-paths"><i class="fa fa-check"></i><b>3.4</b> Files &amp; Paths</a></li>
-<li class="chapter" data-level="3.5" data-path="data-exchange.html"><a href="data-exchange.html#arrow"><i class="fa fa-check"></i><b>3.5</b> Arrow</a></li>
-<li class="chapter" data-level="3.6" data-path="data-exchange.html"><a href="data-exchange.html#stream"><i class="fa fa-check"></i><b>3.6</b> Stream</a></li>
+<li class="chapter" data-level="3.1" data-path="data-exchange.html"><a href="data-exchange.html#the-hordes-r-package"><i class="fa fa-check"></i><b>3.1</b> The <code>hordes</code> R package</a></li>
+<li class="chapter" data-level="3.2" data-path="data-exchange.html"><a href="data-exchange.html#json"><i class="fa fa-check"></i><b>3.2</b> JSON</a></li>
+<li class="chapter" data-level="3.3" data-path="data-exchange.html"><a href="data-exchange.html#text"><i class="fa fa-check"></i><b>3.3</b> Text</a></li>
+<li class="chapter" data-level="3.4" data-path="data-exchange.html"><a href="data-exchange.html#base64-images"><i class="fa fa-check"></i><b>3.4</b> Base64 images</a></li>
+<li class="chapter" data-level="3.5" data-path="data-exchange.html"><a href="data-exchange.html#files-paths"><i class="fa fa-check"></i><b>3.5</b> Files &amp; Paths</a></li>
+<li class="chapter" data-level="3.6" data-path="data-exchange.html"><a href="data-exchange.html#arrow"><i class="fa fa-check"></i><b>3.6</b> Arrow</a></li>
+<li class="chapter" data-level="3.7" data-path="data-exchange.html"><a href="data-exchange.html#stream"><i class="fa fa-check"></i><b>3.7</b> Stream</a></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="building-a-rest-api.html"><a href="building-a-rest-api.html"><i class="fa fa-check"></i><b>4</b> Building a REST API</a><ul>
 <li class="chapter" data-level="4.1" data-path="building-a-rest-api.html"><a href="building-a-rest-api.html#rest-api-101"><i class="fa fa-check"></i><b>4.1</b> REST API 101</a><ul>
@@ -190,23 +191,29 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
             <section class="normal" id="section-">
 <div id="data-exchange" class="section level1">
 <h1><span class="header-section-number">Chapter 3</span> Data Exchange</h1>
-<p>If you want to exchange data between R and NodeJS, use an interchangeable format (JSON, arrow, base64 for images, raw strings…):</p>
+<p>If you want to exchange data between R and NodeJS, use an interchangeable format (JSON, arrow, base64 for images, raw strings…).</p>
+<div id="the-hordes-r-package" class="section level2">
+<h2><span class="header-section-number">3.1</span> The <code>hordes</code> R package</h2>
+<p>There is a <code>hordes</code> R package that contains some functions to facilitate the data translation.</p>
+<p>It can be installed with</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="data-exchange.html#cb16-1"></a>remotes<span class="op">::</span><span class="kw">install_github</span>(<span class="st">&quot;colinfay/hordes&quot;</span>, <span class="dt">subdir =</span> <span class="st">&quot;r-hordes&quot;</span>)</span></code></pre></div>
+</div>
 <div id="json" class="section level2">
-<h2><span class="header-section-number">3.1</span> JSON</h2>
+<h2><span class="header-section-number">3.2</span> JSON</h2>
 <p>Return</p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb16-1"><a href="data-exchange.html#cb16-1"></a><span class="kw">const</span> <span class="op">{</span>library<span class="op">}</span> <span class="op">=</span> <span class="at">require</span>(<span class="st">&#39;hordes&#39;</span>)<span class="op">;</span></span>
-<span id="cb16-2"><a href="data-exchange.html#cb16-2"></a><span class="kw">const</span> jsonlite <span class="op">=</span> <span class="at">library</span>(<span class="st">&quot;jsonlite&quot;</span>)<span class="op">;</span></span>
-<span id="cb16-3"><a href="data-exchange.html#cb16-3"></a><span class="kw">const</span> base <span class="op">=</span> <span class="at">library</span>(<span class="st">&quot;base&quot;</span>)<span class="op">;</span></span>
-<span id="cb16-4"><a href="data-exchange.html#cb16-4"></a></span>
-<span id="cb16-5"><a href="data-exchange.html#cb16-5"></a>(<span class="kw">async</span> () <span class="kw">=&gt;</span> <span class="op">{</span></span>
-<span id="cb16-6"><a href="data-exchange.html#cb16-6"></a>    <span class="cf">try</span> <span class="op">{</span></span>
-<span id="cb16-7"><a href="data-exchange.html#cb16-7"></a>            <span class="kw">const</span> a <span class="op">=</span> <span class="cf">await</span> <span class="va">jsonlite</span>.<span class="at">toJSON</span>(<span class="st">&quot;iris&quot;</span>)</span>
-<span id="cb16-8"><a href="data-exchange.html#cb16-8"></a>            <span class="va">console</span>.<span class="at">log</span>(<span class="va">JSON</span>.<span class="at">parse</span>(a)[<span class="dv">0</span>])</span>
-<span id="cb16-9"><a href="data-exchange.html#cb16-9"></a>        <span class="op">}</span> <span class="cf">catch</span>(e)<span class="op">{</span></span>
-<span id="cb16-10"><a href="data-exchange.html#cb16-10"></a>            <span class="va">console</span>.<span class="at">log</span>(e)</span>
-<span id="cb16-11"><a href="data-exchange.html#cb16-11"></a>        <span class="op">}</span></span>
-<span id="cb16-12"><a href="data-exchange.html#cb16-12"></a><span class="op">}</span></span>
-<span id="cb16-13"><a href="data-exchange.html#cb16-13"></a>)()<span class="op">;</span></span></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb17-1"><a href="data-exchange.html#cb17-1"></a><span class="kw">const</span> <span class="op">{</span>library<span class="op">}</span> <span class="op">=</span> <span class="at">require</span>(<span class="st">&#39;hordes&#39;</span>)<span class="op">;</span></span>
+<span id="cb17-2"><a href="data-exchange.html#cb17-2"></a><span class="kw">const</span> jsonlite <span class="op">=</span> <span class="at">library</span>(<span class="st">&quot;jsonlite&quot;</span>)<span class="op">;</span></span>
+<span id="cb17-3"><a href="data-exchange.html#cb17-3"></a><span class="kw">const</span> base <span class="op">=</span> <span class="at">library</span>(<span class="st">&quot;base&quot;</span>)<span class="op">;</span></span>
+<span id="cb17-4"><a href="data-exchange.html#cb17-4"></a></span>
+<span id="cb17-5"><a href="data-exchange.html#cb17-5"></a>(<span class="kw">async</span> () <span class="kw">=&gt;</span> <span class="op">{</span></span>
+<span id="cb17-6"><a href="data-exchange.html#cb17-6"></a>    <span class="cf">try</span> <span class="op">{</span></span>
+<span id="cb17-7"><a href="data-exchange.html#cb17-7"></a>            <span class="kw">const</span> a <span class="op">=</span> <span class="cf">await</span> <span class="va">jsonlite</span>.<span class="at">toJSON</span>(<span class="st">&quot;iris&quot;</span>)</span>
+<span id="cb17-8"><a href="data-exchange.html#cb17-8"></a>            <span class="va">console</span>.<span class="at">log</span>(<span class="va">JSON</span>.<span class="at">parse</span>(a)[<span class="dv">0</span>])</span>
+<span id="cb17-9"><a href="data-exchange.html#cb17-9"></a>        <span class="op">}</span> <span class="cf">catch</span>(e)<span class="op">{</span></span>
+<span id="cb17-10"><a href="data-exchange.html#cb17-10"></a>            <span class="va">console</span>.<span class="at">log</span>(e)</span>
+<span id="cb17-11"><a href="data-exchange.html#cb17-11"></a>        <span class="op">}</span></span>
+<span id="cb17-12"><a href="data-exchange.html#cb17-12"></a><span class="op">}</span></span>
+<span id="cb17-13"><a href="data-exchange.html#cb17-13"></a>)()<span class="op">;</span></span></code></pre></div>
 <pre><code>{
   &#39;Sepal.Length&#39;: 5.1,
   &#39;Sepal.Width&#39;: 3.5,
@@ -216,35 +223,71 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 }</code></pre>
 </div>
 <div id="text" class="section level2">
-<h2><span class="header-section-number">3.2</span> Text</h2>
+<h2><span class="header-section-number">3.3</span> Text</h2>
 <p>By default, everything is returned as a string.
 From the R side, it’s better to print things with <code>cat</code>, as it allows to avoid the <code>[1]</code> in front of the console printing.</p>
-<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="data-exchange.html#cb18-1"></a><span class="dv">21</span></span></code></pre></div>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="data-exchange.html#cb19-1"></a><span class="dv">21</span></span></code></pre></div>
 <pre><code>## [1] 21</code></pre>
-<div class="sourceCode" id="cb20"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb20-1"><a href="data-exchange.html#cb20-1"></a>(<span class="kw">async</span> () <span class="kw">=&gt;</span> <span class="op">{</span></span>
-<span id="cb20-2"><a href="data-exchange.html#cb20-2"></a>    <span class="cf">try</span> <span class="op">{</span></span>
-<span id="cb20-3"><a href="data-exchange.html#cb20-3"></a>            <span class="kw">const</span> b <span class="op">=</span> <span class="cf">await</span> <span class="va">base</span>.<span class="at">cat</span>(<span class="st">&quot;21&quot;</span>)</span>
-<span id="cb20-4"><a href="data-exchange.html#cb20-4"></a>            <span class="va">console</span>.<span class="at">log</span>(<span class="at">parseInt</span>(b) <span class="op">*</span> <span class="dv">2</span>)</span>
-<span id="cb20-5"><a href="data-exchange.html#cb20-5"></a>        <span class="op">}</span> <span class="cf">catch</span>(e)<span class="op">{</span></span>
-<span id="cb20-6"><a href="data-exchange.html#cb20-6"></a>            <span class="va">console</span>.<span class="at">log</span>(e)</span>
-<span id="cb20-7"><a href="data-exchange.html#cb20-7"></a>        <span class="op">}</span></span>
-<span id="cb20-8"><a href="data-exchange.html#cb20-8"></a><span class="op">}</span></span>
-<span id="cb20-9"><a href="data-exchange.html#cb20-9"></a>)()<span class="op">;</span></span></code></pre></div>
+<div class="sourceCode" id="cb21"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb21-1"><a href="data-exchange.html#cb21-1"></a>(<span class="kw">async</span> () <span class="kw">=&gt;</span> <span class="op">{</span></span>
+<span id="cb21-2"><a href="data-exchange.html#cb21-2"></a>    <span class="cf">try</span> <span class="op">{</span></span>
+<span id="cb21-3"><a href="data-exchange.html#cb21-3"></a>            <span class="kw">const</span> b <span class="op">=</span> <span class="cf">await</span> <span class="va">base</span>.<span class="at">cat</span>(<span class="st">&quot;21&quot;</span>)</span>
+<span id="cb21-4"><a href="data-exchange.html#cb21-4"></a>            <span class="va">console</span>.<span class="at">log</span>(<span class="at">parseInt</span>(b) <span class="op">*</span> <span class="dv">2</span>)</span>
+<span id="cb21-5"><a href="data-exchange.html#cb21-5"></a>        <span class="op">}</span> <span class="cf">catch</span>(e)<span class="op">{</span></span>
+<span id="cb21-6"><a href="data-exchange.html#cb21-6"></a>            <span class="va">console</span>.<span class="at">log</span>(e)</span>
+<span id="cb21-7"><a href="data-exchange.html#cb21-7"></a>        <span class="op">}</span></span>
+<span id="cb21-8"><a href="data-exchange.html#cb21-8"></a><span class="op">}</span></span>
+<span id="cb21-9"><a href="data-exchange.html#cb21-9"></a>)()<span class="op">;</span></span></code></pre></div>
 </div>
 <div id="base64-images" class="section level2">
-<h2><span class="header-section-number">3.3</span> Base64 images</h2>
-<p>// TODO</p>
+<h2><span class="header-section-number">3.4</span> Base64 images</h2>
+<p>Given the following R function, contained in a package called <code>{hordesx}</code></p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="data-exchange.html#cb22-1"></a>ggpoint &lt;-<span class="st"> </span><span class="cf">function</span>(n) {</span>
+<span id="cb22-2"><a href="data-exchange.html#cb22-2"></a>  gg &lt;-<span class="st"> </span><span class="kw">ggplot</span>(iris[<span class="dv">1</span><span class="op">:</span>n, ], <span class="kw">aes</span>(Sepal.Length, Sepal.Width)) <span class="op">+</span></span>
+<span id="cb22-3"><a href="data-exchange.html#cb22-3"></a><span class="st">    </span><span class="kw">geom_point</span>()</span>
+<span id="cb22-4"><a href="data-exchange.html#cb22-4"></a>  hordes<span class="op">::</span><span class="kw">base64_img_ggplot</span>(gg)</span>
+<span id="cb22-5"><a href="data-exchange.html#cb22-5"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb23"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb23-1"><a href="data-exchange.html#cb23-1"></a><span class="kw">const</span> express <span class="op">=</span> <span class="at">require</span>(<span class="st">&#39;express&#39;</span>)<span class="op">;</span></span>
+<span id="cb23-2"><a href="data-exchange.html#cb23-2"></a><span class="kw">const</span> <span class="op">{</span>library<span class="op">}</span> <span class="op">=</span> <span class="at">require</span>(<span class="st">&#39;hordes&#39;</span>)<span class="op">;</span></span>
+<span id="cb23-3"><a href="data-exchange.html#cb23-3"></a><span class="kw">const</span> app <span class="op">=</span> <span class="at">express</span>()<span class="op">;</span></span>
+<span id="cb23-4"><a href="data-exchange.html#cb23-4"></a><span class="kw">const</span> hordesx <span class="op">=</span> <span class="at">library</span>(<span class="st">&quot;hordesx&quot;</span>)</span>
+<span id="cb23-5"><a href="data-exchange.html#cb23-5"></a></span>
+<span id="cb23-6"><a href="data-exchange.html#cb23-6"></a><span class="va">app</span>.<span class="at">get</span>(<span class="st">&#39;/ggplot&#39;</span><span class="op">,</span> <span class="kw">async</span> (req<span class="op">,</span> res) <span class="kw">=&gt;</span> <span class="op">{</span></span>
+<span id="cb23-7"><a href="data-exchange.html#cb23-7"></a>    <span class="cf">try</span> <span class="op">{</span></span>
+<span id="cb23-8"><a href="data-exchange.html#cb23-8"></a>        <span class="kw">const</span> im <span class="op">=</span> <span class="cf">await</span> <span class="va">hordesx</span>.<span class="at">ggpoint</span>(<span class="vs">`n = </span><span class="sc">${</span><span class="va">req</span>.<span class="va">query</span>.<span class="at">n</span><span class="sc">}</span><span class="vs">`</span>)<span class="op">;</span></span>
+<span id="cb23-9"><a href="data-exchange.html#cb23-9"></a>        <span class="kw">const</span> img <span class="op">=</span> <span class="va">Buffer</span>.<span class="at">from</span>(im<span class="op">,</span> <span class="st">&#39;base64&#39;</span>)<span class="op">;</span></span>
+<span id="cb23-10"><a href="data-exchange.html#cb23-10"></a>        <span class="va">res</span>.<span class="at">writeHead</span>(<span class="dv">200</span><span class="op">,</span> <span class="op">{</span></span>
+<span id="cb23-11"><a href="data-exchange.html#cb23-11"></a>          <span class="st">&#39;Content-Type&#39;</span><span class="op">:</span> <span class="st">&#39;image/png&#39;</span><span class="op">,</span></span>
+<span id="cb23-12"><a href="data-exchange.html#cb23-12"></a>          <span class="st">&#39;Content-Length&#39;</span><span class="op">:</span> <span class="va">img</span>.<span class="at">length</span></span>
+<span id="cb23-13"><a href="data-exchange.html#cb23-13"></a>        <span class="op">}</span>)<span class="op">;</span></span>
+<span id="cb23-14"><a href="data-exchange.html#cb23-14"></a>      <span class="va">res</span>.<span class="at">end</span>(img)<span class="op">;</span> </span>
+<span id="cb23-15"><a href="data-exchange.html#cb23-15"></a>    <span class="op">}</span> <span class="cf">catch</span>(e)<span class="op">{</span></span>
+<span id="cb23-16"><a href="data-exchange.html#cb23-16"></a>        <span class="va">res</span>.<span class="at">status</span>(<span class="dv">500</span>).<span class="at">send</span>(e)</span>
+<span id="cb23-17"><a href="data-exchange.html#cb23-17"></a>    <span class="op">}</span></span>
+<span id="cb23-18"><a href="data-exchange.html#cb23-18"></a><span class="op">}</span>)</span>
+<span id="cb23-19"><a href="data-exchange.html#cb23-19"></a></span>
+<span id="cb23-20"><a href="data-exchange.html#cb23-20"></a><span class="va">app</span>.<span class="at">listen</span>(<span class="dv">2811</span><span class="op">,</span> <span class="kw">function</span> () <span class="op">{</span></span>
+<span id="cb23-21"><a href="data-exchange.html#cb23-21"></a>  <span class="va">console</span>.<span class="at">log</span>(<span class="st">&#39;Example app listening on port 2811!&#39;</span>)</span>
+<span id="cb23-22"><a href="data-exchange.html#cb23-22"></a><span class="op">}</span>)</span></code></pre></div>
+<blockquote>
+<p><a href="http://localhost:2811/ggplot?n=5" class="uri">http://localhost:2811/ggplot?n=5</a></p>
+</blockquote>
+<blockquote>
+<p><a href="http://localhost:2811/ggplot?n=50" class="uri">http://localhost:2811/ggplot?n=50</a></p>
+</blockquote>
+<blockquote>
+<p><a href="http://localhost:2811/ggplot?n=150" class="uri">http://localhost:2811/ggplot?n=150</a></p>
+</blockquote>
 </div>
 <div id="files-paths" class="section level2">
-<h2><span class="header-section-number">3.4</span> Files &amp; Paths</h2>
+<h2><span class="header-section-number">3.5</span> Files &amp; Paths</h2>
 <p>// TODO</p>
 </div>
 <div id="arrow" class="section level2">
-<h2><span class="header-section-number">3.5</span> Arrow</h2>
+<h2><span class="header-section-number">3.6</span> Arrow</h2>
 <p>// TODO</p>
 </div>
 <div id="stream" class="section level2">
-<h2><span class="header-section-number">3.6</span> Stream</h2>
+<h2><span class="header-section-number">3.7</span> Stream</h2>
 <p>// TODO</p>
 
 </div>

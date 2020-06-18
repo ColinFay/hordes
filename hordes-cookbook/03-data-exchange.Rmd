@@ -1,6 +1,16 @@
 # Data Exchange 
 
-If you want to exchange data between R and NodeJS, use an interchangeable format (JSON, arrow, base64 for images, raw strings...):
+If you want to exchange data between R and NodeJS, use an interchangeable format (JSON, arrow, base64 for images, raw strings...).
+
+## The `hordes` R package
+
+There is a `hordes` R package that contains some functions to facilitate the data translation. 
+
+It can be installed with 
+
+```r
+remotes::install_github("colinfay/hordes", subdir = "r-hordes")
+```
 
 ## JSON
 
@@ -56,7 +66,48 @@ From the R side, it's better to print things with `cat`, as it allows to avoid t
 
 ## Base64 images
 
-// TODO 
+Given the following R function, contained in a package called `{hordesx}`
+
+```{r}
+ggpoint <- function(n) {
+  gg <- ggplot(iris[1:n, ], aes(Sepal.Length, Sepal.Width)) +
+    geom_point()
+  hordes::base64_img_ggplot(gg)
+}
+
+```
+
+
+```javascript
+const express = require('express');
+const {library} = require('hordes');
+const app = express();
+const hordesx = library("hordesx")
+
+app.get('/ggplot', async (req, res) => {
+    try {
+        const im = await hordesx.ggpoint(`n = ${req.query.n}`);
+        const img = Buffer.from(im, 'base64');
+        res.writeHead(200, {
+          'Content-Type': 'image/png',
+          'Content-Length': img.length
+        });
+      res.end(img); 
+    } catch(e){
+        res.status(500).send(e)
+    }
+})
+
+app.listen(2811, function () {
+  console.log('Example app listening on port 2811!')
+})
+```
+
+> http://localhost:2811/ggplot?n=5
+
+> http://localhost:2811/ggplot?n=50
+
+> http://localhost:2811/ggplot?n=150
 
 ## Files & Paths
 

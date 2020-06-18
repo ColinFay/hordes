@@ -12,7 +12,7 @@ description: "This is a cookbook on using hordes"
 
 # `hordes` cookbook {-}
 
-__WORK IN PROGRESS DISCLAIMER__: I'm trying to document how to use `hordes`, but it should take some time... 
+__DISCLAIMER - WORK IN PROGRESS__: I'm trying to document how to use `hordes`, but it should take some time... 
 So at the time of reading these lines, a lot of chapters will not be completed. 
 
 Welcome to `hordes` cookbook. 

@@ -8,7 +8,7 @@
 
 ```javascript
 const express = require('express');
-const {library} = require('./index.js');
+const {library} = require('hordes');
 const app = express();
 const stats = library("stats");
 
