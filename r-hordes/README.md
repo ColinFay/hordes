@@ -19,7 +19,7 @@ remotes::install_github("colinfay/hordes", subdir = "r-hordes")
 
 ## Example
 
-The `{hordes}` R package simplify data translation from R to NodeJS.
+The `{hordes}` R package simplifies data translation from R to NodeJS.
 
 For example, here is a function that spits base64 encoding of a ggplot,
 which can then be read by NodeJS.
