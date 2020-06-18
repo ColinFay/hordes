@@ -1,12 +1,23 @@
 {
     "name": "hordes",
-    "version": "0.1.1",
-    "description": "",
+    "version": "0.1.2",
+    "description": "Call R from NodeJS, the smart way.",
     "main": "index.js",
-    "keywords": [],
-    "author": "",
+    "keywords": [
+        "R",
+        "data science",
+        "languages"
+    ],
+    "scripts": {
+        "test": "mocha --reporter spec"
+    },
+    "author": "Colin Fay <contact@colinfay.me> (https://colinfay.me)",
     "license": "MIT",
     "dependencies": {
         "fast-memoize": "^2.5.2"
+    },
+    "devDependencies": {
+        "chai": "^4.2.0",
+        "mocha": "^8.0.1"
     }
 }
