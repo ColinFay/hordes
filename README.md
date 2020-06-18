@@ -30,7 +30,7 @@ And don't get me started on scaling NodeJS applications.
 
 From the R point of view, the general idea with `hordes` is that every R function call should be stateless. 
 Keeping this idea in mind, you can build a package where functions are to be considered as 'endpoints' which are then called from NodeJS. 
-In other words, there is no "shared-state" between two calls to R—if you want this to happen, you should either register the values inside Node, save it on disk, or use a database as a backend (which should be the prefered solution if you ask me). 
+In other words, there is no "shared-state" between two calls to R—if you want this to happen, you should either register the values inside Node, save it on disk, or use a database as a backend (which should be the preferred solution if you ask me). 
 
 Examples below will probably make this idea clearer.
 
@@ -126,6 +126,8 @@ Coefficients:
 
 Values returned by the `hordes` functions, once in NodeJS, are string values matching the `stdout` of `Rscript`.
 
+### Data Exchange
+
 If you want to exchange data between R and NodeJS, use an interchangeable format (JSON, arrow, base64 for images, raw strings...):
 
 ``` javascript
@@ -160,6 +162,56 @@ const base = library("base");
 }
 42
 ```
+
+Note that there is a `hordes` R package here on the [r-hordes](r-hordes) folder, and that it contains some functions to facilitate the data translation. 
+
+It can be installed with 
+
+```r
+remotes::install_github("colinfay/hordes", subdir = "r-hordes")
+```
+
+For example, to share images, you can create a function in a package (here named "`{hordex}`") that does: 
+
+```r
+ggpoint <- function(n) {
+  gg <- ggplot(iris[1:n, ], aes(Sepal.Length, Sepal.Width)) +
+    geom_point()
+  hordes::base64_img_ggplot(gg)
+}
+
+```
+
+Then in JavaScript:
+
+```javascript
+const express = require('express');
+const {library} = require('hordes');
+const app = express();
+const hordesx = library("hordesx")
+
+app.get('/ggplot', async (req, res) => {
+    try {
+        const im = await hordesx.ggpoint(`n = ${req.query.n}`);
+        const img = Buffer.from(im, 'base64');
+        res.writeHead(200, {
+          'Content-Type': 'image/png',
+          'Content-Length': img.length
+        });
+      res.end(img); 
+    } catch(e){
+        res.status(500).send(e)
+    }
+})
+
+app.listen(2811, function () {
+  console.log('Example app listening on port 2811!')
+})
+```
+
+> http://localhost:2811/ggplot?n=5
+> http://localhost:2811/ggplot?n=50
+> http://localhost:2811/ggplot?n=150
 
 #### `mlibrary`
 
@@ -242,7 +294,7 @@ Object.keys(golem).length
 
 You can launch an R process that streams data and wait for a specific output in the stdout. 
 
-The promise resolves with and `{proc, raw_output}`: `proc` is the processs object created by Node, `raw_output` is the output buffer, that can be turned to string with `.toString()`.
+The promise resolves with and `{proc, raw_output}`: `proc` is the process object created by Node, `raw_output` is the output buffer, that can be turned to string with `.toString()`.
 
 A streaming process here is considered in a lose sense: what we mean here is anything that prints various elements to the console. 
 For example, when you create a new application using the `{golem}` package, the app is ready once this last line is printed to the console. 
