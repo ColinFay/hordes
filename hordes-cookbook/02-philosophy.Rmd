@@ -1,0 +1,19 @@
+# `hordes` philosophy {#intro}
+
+## General Philosophy
+
+The general idea of `hordes` is that NodeJS is the perfect tool when it comes to HTTP i/o, hence we can leverage the strength of this ecosystem to build Web Services that can serve R results. 
+For example, if you have a web service that needs authentication, using `hordes` allows to reuse existing NodeJS modules, which are widely used and tested inside the NodeJS ecosystem.
+Another good example is NodeJS native cluster mode, and external modules like `pm2` which are designed to launch your app in a multicore mode, and also that watches that your app is still running continuously, and relaunches it if one of the process stop (kind of handy for a production application that handle a lot of load). 
+It also makes things easier when it comes to mixing various languages in the same API: for example, you can serve standard html on an endpoint, and R on others. 
+And don't get me started on scaling NodeJS applications.
+
+## R, package, and stateless code
+
+From the R point of view, the general idea with `hordes` is that every R function call should be stateless. 
+Keeping this idea in mind, you can build a package where functions are to be considered as 'endpoints' which are then called from NodeJS. 
+In other words, there is no "shared-state" between two calls to R—if you want this to happen, you should either register the values inside Node, save it on disk, or use a database as a backend (which should be the preferred solution if you ask me). 
+
+## General infrastructure consideration
+
+// TODO 

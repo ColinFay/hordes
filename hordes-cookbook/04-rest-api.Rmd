@@ -1,0 +1,50 @@
+# Building a REST API
+
+## REST API 101
+
+### About express 
+
+### Example
+
+```javascript
+const express = require('express');
+const {library} = require('./index.js');
+const app = express();
+const stats = library("stats");
+
+app.get('/iris', async (req, res) => {
+    try {
+        const output = await jsonlite.toJSON("iris")
+        res.send( output )
+    } catch(e){
+        res.status(500).send(e)
+    }
+})
+
+app.get('/mtcars', async (req, res) => {
+    try {
+        const output = await jsonlite.toJSON("mtcars")
+        res.send( output )
+    } catch(e) {
+        res.status(500).send(e)
+    }
+})
+
+app.listen(2811, function () {
+  console.log('Example app listening on port 2811!')
+})
+```
+
+## REST API Design pattern with `hordes`
+
+### R package
+
+// TODO 
+
+### Infrastructure
+
+// TODO 
+
+### Example
+
+// TODO 

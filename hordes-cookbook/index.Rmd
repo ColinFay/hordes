@@ -1,0 +1,34 @@
+--- 
+title: "hordes cookbook"
+author: "Colin Fay"
+date: "`r Sys.Date()`"
+site: bookdown::bookdown_site
+documentclass: book
+bibliography: [book.bib, packages.bib]
+biblio-style: apalike
+link-citations: yes
+description: "This is a cookbook on using hordes"
+---
+
+# `hordes` cookbook {-}
+
+__WORK IN PROGRESS DISCLAIMER__: I'm trying to document how to use `hordes`, but it should take some time... 
+So at the time of reading these lines, a lot of chapters will not be completed. 
+
+Welcome to `hordes` cookbook. 
+
++ The first chapter gives a general overview of `hordes` basics. 
+This chapter is probably the one you should go to if you have no idea what this project is about. 
++ The second chapter will introduce you to `hordes` general philosophy, and about how to think about your code when building tools that make use of `hordes`. 
++ The third chapter introduces the data formats you can use to share things between Node and R in `hordes`. 
++ The fourth chapter develops how to build a full REST API that uses `hordes`
++ The fifth chapter introduces how to build a full Node web app that can call R functions
++ The sicth chapter shows some benchmark made when it comes to using `hordes` or other frameworks. 
+
+```{r include=FALSE}
+
+# automatically create a bib database for R packages
+knitr::write_bib(c(
+  .packages(), 'bookdown', 'knitr', 'rmarkdown'
+), 'packages.bib')
+```

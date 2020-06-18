@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>hordes cookbook</title>
+  <meta name="description" content="This is a cookbook on using hordes" />
+  <meta name="generator" content="bookdown 0.18 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="hordes cookbook" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="This is a cookbook on using hordes" />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="hordes cookbook" />
+  
+  <meta name="twitter:description" content="This is a cookbook on using hordes" />
+  
+
+<meta name="author" content="Colin Fay" />
+
+
+<meta name="date" content="2020-06-18" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+
+<link rel="next" href="the-whole-game.html"/>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+
+
+<style type="text/css">
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">hordes Cookbook</a></li>
+
+<li class="divider"></li>
+<li><a href="index.html#hordes-cookbook"><code>hordes</code> cookbook</a></li>
+<li class="chapter" data-level="1" data-path="the-whole-game.html"><a href="the-whole-game.html"><i class="fa fa-check"></i><b>1</b> The Whole Game</a><ul>
+<li class="chapter" data-level="1.1" data-path="the-whole-game.html"><a href="the-whole-game.html#library"><i class="fa fa-check"></i><b>1.1</b> <code>library</code></a></li>
+<li class="chapter" data-level="1.2" data-path="the-whole-game.html"><a href="the-whole-game.html#mlibrary"><i class="fa fa-check"></i><b>1.2</b> <code>mlibrary</code></a></li>
+<li class="chapter" data-level="1.3" data-path="the-whole-game.html"><a href="the-whole-game.html#get_hash"><i class="fa fa-check"></i><b>1.3</b> <code>get_hash</code></a></li>
+<li class="chapter" data-level="1.4" data-path="the-whole-game.html"><a href="the-whole-game.html#waiter"><i class="fa fa-check"></i><b>1.4</b> <code>waiter</code></a></li>
+<li class="chapter" data-level="1.5" data-path="the-whole-game.html"><a href="the-whole-game.html#changing-the-process-that-runs-r"><i class="fa fa-check"></i><b>1.5</b> Changing the process that runs R</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>2</b> <code>hordes</code> philosophy</a><ul>
+<li class="chapter" data-level="2.1" data-path="intro.html"><a href="intro.html#general-philosophy"><i class="fa fa-check"></i><b>2.1</b> General Philosophy</a></li>
+<li class="chapter" data-level="2.2" data-path="intro.html"><a href="intro.html#r-package-and-stateless-code"><i class="fa fa-check"></i><b>2.2</b> R, package, and stateless code</a></li>
+<li class="chapter" data-level="2.3" data-path="intro.html"><a href="intro.html#general-infrastructure-consideration"><i class="fa fa-check"></i><b>2.3</b> General infrastructure consideration</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="data-exchange.html"><a href="data-exchange.html"><i class="fa fa-check"></i><b>3</b> Data Exchange</a><ul>
+<li class="chapter" data-level="3.1" data-path="data-exchange.html"><a href="data-exchange.html#json"><i class="fa fa-check"></i><b>3.1</b> JSON</a></li>
+<li class="chapter" data-level="3.2" data-path="data-exchange.html"><a href="data-exchange.html#text"><i class="fa fa-check"></i><b>3.2</b> Text</a></li>
+<li class="chapter" data-level="3.3" data-path="data-exchange.html"><a href="data-exchange.html#base64-images"><i class="fa fa-check"></i><b>3.3</b> Base64 images</a></li>
+<li class="chapter" data-level="3.4" data-path="data-exchange.html"><a href="data-exchange.html#files-paths"><i class="fa fa-check"></i><b>3.4</b> Files &amp; Paths</a></li>
+<li class="chapter" data-level="3.5" data-path="data-exchange.html"><a href="data-exchange.html#arrow"><i class="fa fa-check"></i><b>3.5</b> Arrow</a></li>
+<li class="chapter" data-level="3.6" data-path="data-exchange.html"><a href="data-exchange.html#stream"><i class="fa fa-check"></i><b>3.6</b> Stream</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="building-a-rest-api.html"><a href="building-a-rest-api.html"><i class="fa fa-check"></i><b>4</b> Building a REST API</a><ul>
+<li class="chapter" data-level="4.1" data-path="building-a-rest-api.html"><a href="building-a-rest-api.html#rest-api-101"><i class="fa fa-check"></i><b>4.1</b> REST API 101</a><ul>
+<li class="chapter" data-level="4.1.1" data-path="building-a-rest-api.html"><a href="building-a-rest-api.html#about-express"><i class="fa fa-check"></i><b>4.1.1</b> About express</a></li>
+<li class="chapter" data-level="4.1.2" data-path="building-a-rest-api.html"><a href="building-a-rest-api.html#example"><i class="fa fa-check"></i><b>4.1.2</b> Example</a></li>
+</ul></li>
+<li class="chapter" data-level="4.2" data-path="building-a-rest-api.html"><a href="building-a-rest-api.html#rest-api-design-pattern-with-hordes"><i class="fa fa-check"></i><b>4.2</b> REST API Design pattern with <code>hordes</code></a><ul>
+<li class="chapter" data-level="4.2.1" data-path="building-a-rest-api.html"><a href="building-a-rest-api.html#r-package"><i class="fa fa-check"></i><b>4.2.1</b> R package</a></li>
+<li class="chapter" data-level="4.2.2" data-path="building-a-rest-api.html"><a href="building-a-rest-api.html#infrastructure"><i class="fa fa-check"></i><b>4.2.2</b> Infrastructure</a></li>
+<li class="chapter" data-level="4.2.3" data-path="building-a-rest-api.html"><a href="building-a-rest-api.html#example-1"><i class="fa fa-check"></i><b>4.2.3</b> Example</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="building-a-web-app.html"><a href="building-a-web-app.html"><i class="fa fa-check"></i><b>5</b> Building a Web App</a></li>
+<li class="chapter" data-level="6" data-path="benchmark.html"><a href="benchmark.html"><i class="fa fa-check"></i><b>6</b> Benchmark</a></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">hordes cookbook</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="header">
+<h1 class="title">hordes cookbook</h1>
+<p class="author"><em>Colin Fay</em></p>
+<p class="date"><em>2020-06-18</em></p>
+</div>
+<div id="hordes-cookbook" class="section level1 unnumbered">
+<h1><code>hordes</code> cookbook</h1>
+<p><strong>WORK IN PROGRESS DISCLAIMER</strong>: I’m trying to document how to use <code>hordes</code>, but it should take some time…
+So at the time of reading these lines, a lot of chapters will not be completed.</p>
+<p>Welcome to <code>hordes</code> cookbook.</p>
+<ul>
+<li>The first chapter gives a general overview of <code>hordes</code> basics.
+This chapter is probably the one you should go to if you have no idea what this project is about.</li>
+<li>The second chapter will introduce you to <code>hordes</code> general philosophy, and about how to think about your code when building tools that make use of <code>hordes</code>.</li>
+<li>The third chapter introduces the data formats you can use to share things between Node and R in <code>hordes</code>.</li>
+<li>The fourth chapter develops how to build a full REST API that uses <code>hordes</code></li>
+<li>The fifth chapter introduces how to build a full Node web app that can call R functions</li>
+<li>The sicth chapter shows some benchmark made when it comes to using <code>hordes</code> or other frameworks.</li>
+</ul>
+
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+
+<a href="the-whole-game.html" class="navigation navigation-next navigation-unique" aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["hordes-cookbook.pdf", "hordes-cookbook.epub"],
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+</body>
+
+</html>
