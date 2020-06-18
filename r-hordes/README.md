@@ -1,0 +1,73 @@
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+# hordes
+
+<!-- badges: start -->
+
+<!-- badges: end -->
+
+The goal of hordes is to provide data translation functions for the
+`hordes` NodeJS package.
+
+## Installation
+
+``` r
+# install.packages("remotes")
+remotes::install_github("colinfay/hordes", subdir = "r-hordes")
+```
+
+## Example
+
+The `{hordes}` R package simplify data translation from R to NodeJS.
+
+For example, here is a function that spits base64 encoding of a ggplot,
+which can then be read by NodeJS.
+
+``` r
+ggpoint <- function(n) {
+  gg <- ggplot(iris[1:n, ], aes(Sepal.Length, Sepal.Width)) +
+    geom_point()
+  hordes::base64_img_ggplot(gg)
+}
+```
+
+Then in NodeJS:
+
+``` javascript
+const express = require('express');
+const {library} = require('hordes');
+const app = express();
+const hordesx = library("hordesx")
+
+app.get('/ggplot', async (req, res) => {
+    try {
+        const im = await hordesx.ggpoint(`n = ${req.query.n}`);
+        const img = Buffer.from(im, 'base64');
+        res.writeHead(200, {
+          'Content-Type': 'image/png',
+          'Content-Length': img.length
+        });
+      res.end(img); 
+    } catch(e){
+        res.status(500).send(e)
+    }
+})
+
+app.listen(2811, function () {
+  console.log('Example app listening on port 2811!')
+})
+```
+
+> <http://localhost:2811/ggplot?n=5>
+
+> <http://localhost:2811/ggplot?n=50>
+
+> <http://localhost:2811/ggplot?n=150>
+
+## Code of Conduct
+
+Please note that the hordes project is released with a [Contributor Code
+of
+Conduct](https://contributor-covenant.org/version/2/0/CODE_OF_CONDUCT.html).
+By contributing to this project, you agree to abide by its terms.
