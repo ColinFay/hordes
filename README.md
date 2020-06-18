@@ -182,7 +182,7 @@ ggpoint <- function(n) {
 
 ```
 
-Then in JavaScript:
+Then in NodeJS:
 
 ```javascript
 const express = require('express');
