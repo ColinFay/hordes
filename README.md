@@ -171,6 +171,12 @@ It can be installed with
 remotes::install_github("colinfay/hordes", subdir = "r-hordes")
 ```
 
+Or directly from the modules with 
+
+```
+npm run r-hordes-install
+```
+
 For example, to share images, you can create a function in a package (here named "`{hordex}`") that does: 
 
 ```r

@@ -9,7 +9,8 @@
         "languages"
     ],
     "scripts": {
-        "test": "mocha --reporter spec"
+        "test": "mocha --reporter spec",
+        "r-hordes-install": "Rscript -e 'source(\"install.R\")'"
     },
     "author": "Colin Fay <contact@colinfay.me> (https://colinfay.me)",
     "license": "MIT",
