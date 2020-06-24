@@ -1,3 +1,80 @@
 # Building a Web App
 
-// TODO 
+## Example 
+
++ Front end 
+
+```html 
+<!DOCTYPE html>
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+      <title>Test</title>
+   </head>
+<body>
+    <div> Hello hordes! </div>
+    <div>
+      <div>
+        <input type="range" id="volume" name="npoint" min="0" max="150" onchange="change(this.value)">
+        <label for="npoint">n points</label>
+      </div>
+      <img id = "plot" src = "/ggplot?n=50" width = "500px">
+      <img id = "plot2" src = "/ggplot?n=50" width = "500px">
+      <img id = "plot3" src = "/ggplot?n=50" width = "500px">
+    </div>
+    <script type="text/javascript">
+        function change(value){
+          document.getElementById("plot").src = `/ggplot?n=${value}`
+          document.getElementById("plot2").src = `/ggplot?n=${value}`
+          document.getElementById("plot3").src = `/ggplot?n=${value}`
+        }
+    </script>
+</body></html>
+```
+
++ Backend 
+
+```javascript
+const express = require('express');
+const {library} = require('hordes');
+const app = express();
+const hordesx = library("hordesx")
+
+app.get('/ggplot', async (req, res) => {
+    try {
+        const im = await hordesx.ggpoint(`n = ${req.query.n}`);
+        const img = Buffer.from(im, 'base64');
+        res.writeHead(200, {
+          'Content-Type': 'image/png',
+          'Content-Length': img.length
+        });
+      res.end(img); 
+    } catch(e){
+        res.status(500).send(e)
+    }
+})
+
+app.get('/test', function(req, res) {
+    res.sendFile('test.html', {root: __dirname })
+});
+
+app.listen(2811, function () {
+  console.log('Example app listening on port 2811!')
+})
+```
+
++ R Function
+
+```r
+#' ggpoint
+#'
+#' @export
+#' @import ggplot2
+ggpoint <- function(n) {
+  gg <- ggplot(iris[1:n, ], aes(Sepal.Length, Sepal.Width)) +
+    geom_point()
+  hordes::base64_img_ggplot(gg)
+}
+```
+
+![](img/exampleapp.gif)
