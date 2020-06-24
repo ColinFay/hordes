@@ -17,6 +17,10 @@ app.get('/ggplot', async (req, res) => {
     }
 })
 
+app.get('/test', function(req, res) {
+    res.sendFile('test.html', {root: __dirname })
+});
+
 app.listen(2811, function () {
   console.log('Example app listening on port 2811!')
 })

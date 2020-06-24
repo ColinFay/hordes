@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+      <title>Test</title>
+   </head>
+<body>
+    <div> Hello hordes! </div>
+    <div>
+      <div>
+        <input type="range" id="volume" name="npoint" min="0" max="150" onchange="change(this.value)">
+        <label for="npoint">n points</label>
+      </div>
+      <img id = "plot" src = "/ggplot?n=50" width = "500px">
+      <img id = "plot2" src = "/ggplot?n=50" width = "500px">
+      <img id = "plot3" src = "/ggplot?n=50" width = "500px">
+    </div>
+    <script type="text/javascript">
+        function change(value){
+          document.getElementById("plot").src = `/ggplot?n=${value}`
+          document.getElementById("plot2").src = `/ggplot?n=${value}`
+          document.getElementById("plot3").src = `/ggplot?n=${value}`
+        }
+    </script>
+</body></html>
