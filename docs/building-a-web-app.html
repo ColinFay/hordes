@@ -24,7 +24,7 @@
 <meta name="author" content="Colin Fay" />
 
 
-<meta name="date" content="2020-06-24" />
+<meta name="date" content="2020-06-25" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -167,7 +167,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="building-a-web-app.html"><a href="building-a-web-app.html"><i class="fa fa-check"></i><b>5</b> Building a Web App</a><ul>
-<li class="chapter" data-level="5.1" data-path="building-a-web-app.html"><a href="building-a-web-app.html#example-2"><i class="fa fa-check"></i><b>5.1</b> Example</a></li>
+<li class="chapter" data-level="5.1" data-path="building-a-web-app.html"><a href="building-a-web-app.html#example-2"><i class="fa fa-check"></i><b>5.1</b> Example</a><ul>
+<li class="chapter" data-level="5.1.1" data-path="building-a-web-app.html"><a href="building-a-web-app.html#using-http-request-slower"><i class="fa fa-check"></i><b>5.1.1</b> Using HTTP request (slower)</a></li>
+<li class="chapter" data-level="5.1.2" data-path="building-a-web-app.html"><a href="building-a-web-app.html#using-a-websocket"><i class="fa fa-check"></i><b>5.1.2</b> Using a Websocket</a></li>
+</ul></li>
 </ul></li>
 <li class="chapter" data-level="6" data-path="benchmark.html"><a href="benchmark.html"><i class="fa fa-check"></i><b>6</b> Benchmark</a></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
@@ -195,6 +198,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h1><span class="header-section-number">Chapter 5</span> Building a Web App</h1>
 <div id="example-2" class="section level2">
 <h2><span class="header-section-number">5.1</span> Example</h2>
+<div id="using-http-request-slower" class="section level3">
+<h3><span class="header-section-number">5.1.1</span> Using HTTP request (slower)</h3>
 <ul>
 <li>Front end</li>
 </ul>
@@ -265,7 +270,99 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb27-8"><a href="building-a-web-app.html#cb27-8"></a>  hordes<span class="op">::</span><span class="kw">base64_img_ggplot</span>(gg)</span>
 <span id="cb27-9"><a href="building-a-web-app.html#cb27-9"></a>}</span></code></pre></div>
 <p><img src="img/exampleapp.gif" /></p>
+</div>
+<div id="using-a-websocket" class="section level3">
+<h3><span class="header-section-number">5.1.2</span> Using a Websocket</h3>
+<ul>
+<li>Front End</li>
+</ul>
+<div class="sourceCode" id="cb28"><pre class="sourceCode html"><code class="sourceCode html"><span id="cb28-1"><a href="building-a-web-app.html#cb28-1"></a><span class="dt">&lt;!DOCTYPE </span>html<span class="dt">&gt;</span></span>
+<span id="cb28-2"><a href="building-a-web-app.html#cb28-2"></a><span class="kw">&lt;html&gt;</span></span>
+<span id="cb28-3"><a href="building-a-web-app.html#cb28-3"></a>   <span class="kw">&lt;head&gt;</span></span>
+<span id="cb28-4"><a href="building-a-web-app.html#cb28-4"></a>      <span class="kw">&lt;meta</span><span class="ot"> http-equiv=</span><span class="st">&quot;Content-Type&quot;</span><span class="ot"> content=</span><span class="st">&quot;text/html; charset=UTF-8&quot;</span><span class="kw">&gt;</span></span>
+<span id="cb28-5"><a href="building-a-web-app.html#cb28-5"></a>      <span class="kw">&lt;script</span><span class="ot"> src=</span><span class="st">&quot;https://code.jquery.com/jquery-3.4.1.min.js&quot;</span><span class="kw">&gt;&lt;/script&gt;</span></span>
+<span id="cb28-6"><a href="building-a-web-app.html#cb28-6"></a>      <span class="kw">&lt;title&gt;</span>Test<span class="kw">&lt;/title&gt;</span></span>
+<span id="cb28-7"><a href="building-a-web-app.html#cb28-7"></a>   <span class="kw">&lt;/head&gt;</span></span>
+<span id="cb28-8"><a href="building-a-web-app.html#cb28-8"></a><span class="kw">&lt;body&gt;</span></span>
+<span id="cb28-9"><a href="building-a-web-app.html#cb28-9"></a>    <span class="kw">&lt;div&gt;</span> Hello hordes! <span class="kw">&lt;/div&gt;</span></span>
+<span id="cb28-10"><a href="building-a-web-app.html#cb28-10"></a>    <span class="kw">&lt;div&gt;</span></span>
+<span id="cb28-11"><a href="building-a-web-app.html#cb28-11"></a>      <span class="kw">&lt;div&gt;</span></span>
+<span id="cb28-12"><a href="building-a-web-app.html#cb28-12"></a>        <span class="kw">&lt;input</span><span class="ot"> type=</span><span class="st">&quot;range&quot;</span><span class="ot"> id=</span><span class="st">&quot;volume&quot;</span><span class="ot"> name=</span><span class="st">&quot;npoint&quot;</span><span class="ot"> min=</span><span class="st">&quot;0&quot;</span><span class="ot"> max=</span><span class="st">&quot;150&quot;</span><span class="ot"> onchange=</span><span class="st">&quot;update(this.value)&quot;</span><span class="kw">&gt;</span></span>
+<span id="cb28-13"><a href="building-a-web-app.html#cb28-13"></a>        <span class="kw">&lt;label</span><span class="ot"> for=</span><span class="st">&quot;npoint&quot;</span><span class="kw">&gt;</span>n points<span class="kw">&lt;/label&gt;</span></span>
+<span id="cb28-14"><a href="building-a-web-app.html#cb28-14"></a>      <span class="kw">&lt;/div&gt;</span></span>
+<span id="cb28-15"><a href="building-a-web-app.html#cb28-15"></a>      <span class="kw">&lt;img</span><span class="ot"> id</span> <span class="ot">=</span> <span class="st">&quot;plot&quot;</span><span class="ot"> src</span> <span class="ot">=</span> <span class="st">&quot;/ggplot?n=50&quot;</span><span class="ot"> width</span> <span class="ot">=</span> <span class="st">&quot;500px&quot;</span><span class="kw">&gt;</span></span>
+<span id="cb28-16"><a href="building-a-web-app.html#cb28-16"></a>      <span class="kw">&lt;img</span><span class="ot"> id</span> <span class="ot">=</span> <span class="st">&quot;plot2&quot;</span><span class="ot"> src</span> <span class="ot">=</span> <span class="st">&quot;/ggplot?n=50&quot;</span><span class="ot"> width</span> <span class="ot">=</span> <span class="st">&quot;500px&quot;</span><span class="kw">&gt;</span></span>
+<span id="cb28-17"><a href="building-a-web-app.html#cb28-17"></a>      <span class="kw">&lt;img</span><span class="ot"> id</span> <span class="ot">=</span> <span class="st">&quot;plot3&quot;</span><span class="ot"> src</span> <span class="ot">=</span> <span class="st">&quot;/ggplot?n=50&quot;</span><span class="ot"> width</span> <span class="ot">=</span> <span class="st">&quot;500px&quot;</span><span class="kw">&gt;</span></span>
+<span id="cb28-18"><a href="building-a-web-app.html#cb28-18"></a>    <span class="kw">&lt;/div&gt;</span></span>
+<span id="cb28-19"><a href="building-a-web-app.html#cb28-19"></a>    <span class="kw">&lt;script</span><span class="ot"> src=</span><span class="st">&quot;/socket.io/socket.io.js&quot;</span><span class="kw">&gt;&lt;/script&gt;</span></span>
+<span id="cb28-20"><a href="building-a-web-app.html#cb28-20"></a>    <span class="kw">&lt;script&gt;</span></span>
+<span id="cb28-21"><a href="building-a-web-app.html#cb28-21"></a>      <span class="kw">var</span> socket <span class="op">=</span> <span class="at">io</span>()<span class="op">;</span></span>
+<span id="cb28-22"><a href="building-a-web-app.html#cb28-22"></a>      </span>
+<span id="cb28-23"><a href="building-a-web-app.html#cb28-23"></a>      <span class="at">$</span>(<span class="kw">function</span> () <span class="op">{</span></span>
+<span id="cb28-24"><a href="building-a-web-app.html#cb28-24"></a>        <span class="kw">var</span> socket <span class="op">=</span> <span class="at">io</span>()<span class="op">;</span></span>
+<span id="cb28-25"><a href="building-a-web-app.html#cb28-25"></a>        <span class="va">socket</span>.<span class="at">on</span>(<span class="st">&#39;plotbck&#39;</span><span class="op">,</span> <span class="kw">function</span>(base64)<span class="op">{</span></span>
+<span id="cb28-26"><a href="building-a-web-app.html#cb28-26"></a>          <span class="va">document</span>.<span class="at">getElementById</span>(<span class="st">&quot;plot&quot;</span>).<span class="at">src</span> <span class="op">=</span> <span class="vs">`data:image/png;base64, </span><span class="sc">${</span>base64<span class="sc">}</span><span class="vs">`</span></span>
+<span id="cb28-27"><a href="building-a-web-app.html#cb28-27"></a>          <span class="va">document</span>.<span class="at">getElementById</span>(<span class="st">&quot;plot2&quot;</span>).<span class="at">src</span> <span class="op">=</span> <span class="vs">`data:image/png;base64, </span><span class="sc">${</span>base64<span class="sc">}</span><span class="vs">`</span></span>
+<span id="cb28-28"><a href="building-a-web-app.html#cb28-28"></a>          <span class="va">document</span>.<span class="at">getElementById</span>(<span class="st">&quot;plot3&quot;</span>).<span class="at">src</span> <span class="op">=</span> <span class="vs">`data:image/png;base64, </span><span class="sc">${</span>base64<span class="sc">}</span><span class="vs">`</span></span>
+<span id="cb28-29"><a href="building-a-web-app.html#cb28-29"></a>        <span class="op">}</span>)<span class="op">;</span></span>
+<span id="cb28-30"><a href="building-a-web-app.html#cb28-30"></a>      <span class="op">}</span>)<span class="op">;</span></span>
+<span id="cb28-31"><a href="building-a-web-app.html#cb28-31"></a>      </span>
+<span id="cb28-32"><a href="building-a-web-app.html#cb28-32"></a>      <span class="kw">function</span> <span class="at">update</span>(value)<span class="op">{</span></span>
+<span id="cb28-33"><a href="building-a-web-app.html#cb28-33"></a>        <span class="va">socket</span>.<span class="at">emit</span>(<span class="st">&#39;plot&#39;</span><span class="op">,</span> value)<span class="op">;</span></span>
+<span id="cb28-34"><a href="building-a-web-app.html#cb28-34"></a>        <span class="cf">return</span> <span class="kw">false</span><span class="op">;</span></span>
+<span id="cb28-35"><a href="building-a-web-app.html#cb28-35"></a>      <span class="op">}</span></span>
+<span id="cb28-36"><a href="building-a-web-app.html#cb28-36"></a>    <span class="kw">&lt;/script&gt;</span></span>
+<span id="cb28-37"><a href="building-a-web-app.html#cb28-37"></a>    <span class="kw">&lt;script</span><span class="ot"> type=</span><span class="st">&quot;text/javascript&quot;</span><span class="kw">&gt;</span></span>
+<span id="cb28-38"><a href="building-a-web-app.html#cb28-38"></a>    <span class="kw">&lt;/script&gt;</span></span>
+<span id="cb28-39"><a href="building-a-web-app.html#cb28-39"></a><span class="kw">&lt;/body&gt;&lt;/html&gt;</span></span></code></pre></div>
+<ul>
+<li>Backend</li>
+</ul>
+<div class="sourceCode" id="cb29"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb29-1"><a href="building-a-web-app.html#cb29-1"></a><span class="kw">const</span> express <span class="op">=</span> <span class="at">require</span>(<span class="st">&#39;express&#39;</span>)<span class="op">;</span></span>
+<span id="cb29-2"><a href="building-a-web-app.html#cb29-2"></a><span class="kw">const</span> <span class="op">{</span>library<span class="op">}</span> <span class="op">=</span> <span class="at">require</span>(<span class="st">&#39;hordes&#39;</span>)<span class="op">;</span></span>
+<span id="cb29-3"><a href="building-a-web-app.html#cb29-3"></a><span class="kw">const</span> app <span class="op">=</span> <span class="at">express</span>()<span class="op">;</span></span>
+<span id="cb29-4"><a href="building-a-web-app.html#cb29-4"></a></span>
+<span id="cb29-5"><a href="building-a-web-app.html#cb29-5"></a><span class="kw">const</span> http <span class="op">=</span> <span class="at">require</span>(<span class="st">&#39;http&#39;</span>).<span class="at">createServer</span>(app)<span class="op">;</span></span>
+<span id="cb29-6"><a href="building-a-web-app.html#cb29-6"></a><span class="kw">const</span> io <span class="op">=</span> <span class="at">require</span>(<span class="st">&#39;socket.io&#39;</span>)(http)<span class="op">;</span></span>
+<span id="cb29-7"><a href="building-a-web-app.html#cb29-7"></a></span>
+<span id="cb29-8"><a href="building-a-web-app.html#cb29-8"></a><span class="kw">const</span> hordesx <span class="op">=</span> <span class="at">library</span>(<span class="st">&quot;hordesx&quot;</span>)<span class="op">;</span></span>
+<span id="cb29-9"><a href="building-a-web-app.html#cb29-9"></a></span>
+<span id="cb29-10"><a href="building-a-web-app.html#cb29-10"></a><span class="va">app</span>.<span class="at">get</span>(<span class="st">&#39;/test&#39;</span><span class="op">,</span> <span class="kw">function</span>(req<span class="op">,</span> res) <span class="op">{</span></span>
+<span id="cb29-11"><a href="building-a-web-app.html#cb29-11"></a>    <span class="va">res</span>.<span class="at">sendFile</span>(<span class="st">&#39;test.html&#39;</span><span class="op">,</span> <span class="op">{</span><span class="dt">root</span><span class="op">:</span> __dirname <span class="op">}</span>)</span>
+<span id="cb29-12"><a href="building-a-web-app.html#cb29-12"></a><span class="op">}</span>)<span class="op">;</span></span>
+<span id="cb29-13"><a href="building-a-web-app.html#cb29-13"></a></span>
+<span id="cb29-14"><a href="building-a-web-app.html#cb29-14"></a><span class="va">io</span>.<span class="at">on</span>(<span class="st">&#39;connection&#39;</span><span class="op">,</span> <span class="kw">async</span> (socket) <span class="kw">=&gt;</span> <span class="op">{</span></span>
+<span id="cb29-15"><a href="building-a-web-app.html#cb29-15"></a>  </span>
+<span id="cb29-16"><a href="building-a-web-app.html#cb29-16"></a>  <span class="co">// Render the first image</span></span>
+<span id="cb29-17"><a href="building-a-web-app.html#cb29-17"></a>  <span class="kw">const</span> image <span class="op">=</span> <span class="cf">await</span> <span class="va">hordesx</span>.<span class="at">ggpoint</span>(<span class="st">&#39;n = 50&#39;</span>)<span class="op">;</span></span>
+<span id="cb29-18"><a href="building-a-web-app.html#cb29-18"></a>  <span class="va">io</span>.<span class="at">emit</span>(<span class="st">&#39;plotbck&#39;</span><span class="op">,</span> image)<span class="op">;</span></span>
+<span id="cb29-19"><a href="building-a-web-app.html#cb29-19"></a>  </span>
+<span id="cb29-20"><a href="building-a-web-app.html#cb29-20"></a>  <span class="co">// Render plot on change</span></span>
+<span id="cb29-21"><a href="building-a-web-app.html#cb29-21"></a>  <span class="va">socket</span>.<span class="at">on</span>(<span class="st">&#39;plot&#39;</span><span class="op">,</span> <span class="kw">async</span>(value) <span class="kw">=&gt;</span> <span class="op">{</span></span>
+<span id="cb29-22"><a href="building-a-web-app.html#cb29-22"></a>    <span class="kw">const</span> image <span class="op">=</span> <span class="cf">await</span> <span class="va">hordesx</span>.<span class="at">ggpoint</span>(<span class="vs">`n = </span><span class="sc">${</span>value<span class="sc">}</span><span class="vs">`</span>)<span class="op">;</span></span>
+<span id="cb29-23"><a href="building-a-web-app.html#cb29-23"></a>    <span class="va">io</span>.<span class="at">emit</span>(<span class="st">&#39;plotbck&#39;</span><span class="op">,</span> image)<span class="op">;</span></span>
+<span id="cb29-24"><a href="building-a-web-app.html#cb29-24"></a>  <span class="op">}</span>)<span class="op">;</span></span>
+<span id="cb29-25"><a href="building-a-web-app.html#cb29-25"></a>  </span>
+<span id="cb29-26"><a href="building-a-web-app.html#cb29-26"></a><span class="op">}</span>)<span class="op">;</span></span>
+<span id="cb29-27"><a href="building-a-web-app.html#cb29-27"></a></span>
+<span id="cb29-28"><a href="building-a-web-app.html#cb29-28"></a><span class="va">http</span>.<span class="at">listen</span>(<span class="dv">2811</span><span class="op">,</span> <span class="kw">function</span> () <span class="op">{</span></span>
+<span id="cb29-29"><a href="building-a-web-app.html#cb29-29"></a>  <span class="va">console</span>.<span class="at">log</span>(<span class="st">&#39;Example app listening on port 2811!&#39;</span>)</span>
+<span id="cb29-30"><a href="building-a-web-app.html#cb29-30"></a><span class="op">}</span>)</span></code></pre></div>
+<ul>
+<li>R Function</li>
+</ul>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="building-a-web-app.html#cb30-1"></a><span class="co">#&#39; ggpoint</span></span>
+<span id="cb30-2"><a href="building-a-web-app.html#cb30-2"></a><span class="co">#&#39;</span></span>
+<span id="cb30-3"><a href="building-a-web-app.html#cb30-3"></a><span class="co">#&#39; @export</span></span>
+<span id="cb30-4"><a href="building-a-web-app.html#cb30-4"></a><span class="co">#&#39; @import ggplot2</span></span>
+<span id="cb30-5"><a href="building-a-web-app.html#cb30-5"></a>ggpoint &lt;-<span class="st"> </span><span class="cf">function</span>(n) {</span>
+<span id="cb30-6"><a href="building-a-web-app.html#cb30-6"></a>  gg &lt;-<span class="st"> </span><span class="kw">ggplot</span>(iris[<span class="dv">1</span><span class="op">:</span>n, ], <span class="kw">aes</span>(Sepal.Length, Sepal.Width)) <span class="op">+</span></span>
+<span id="cb30-7"><a href="building-a-web-app.html#cb30-7"></a><span class="st">    </span><span class="kw">geom_point</span>()</span>
+<span id="cb30-8"><a href="building-a-web-app.html#cb30-8"></a>  hordes<span class="op">::</span><span class="kw">base64_img_ggplot</span>(gg)</span>
+<span id="cb30-9"><a href="building-a-web-app.html#cb30-9"></a>}</span></code></pre></div>
+<p><img src="img/exampleappwebsocket.gif" /></p>
 
+</div>
 </div>
 </div>
             </section>
