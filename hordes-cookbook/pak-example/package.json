@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "hordes": "^0.1.1"
+    "hordes": "^0.1.1",
+    "socket.io": "^2.3.0"
   }
 }

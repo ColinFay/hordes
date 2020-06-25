@@ -1,26 +1,34 @@
 const express = require('express');
 const {library} = require('hordes');
 const app = express();
-const hordesx = library("hordesx")
 
-app.get('/ggplot', async (req, res) => {
-    try {
-        const im = await hordesx.ggpoint(`n = ${req.query.n}`);
-        const img = Buffer.from(im, 'base64');
-        res.writeHead(200, {
-          'Content-Type': 'image/png',
-          'Content-Length': img.length
-        });
-      res.end(img); 
-    } catch(e){
-        res.status(500).send(e)
-    }
-})
+const http = require('http').createServer(app);
+const io = require('socket.io')(http);
+
+const hordesx = library("hordesx");
 
 app.get('/test', function(req, res) {
     res.sendFile('test.html', {root: __dirname })
 });
 
-app.listen(2811, function () {
+io.on('connection', async (socket) => {
+  
+  // Render the first image
+  const image = await hordesx.ggpoint('n = 50');
+  io.emit('plotbck', image);
+  
+  // Render plot on change
+  socket.on('plot', async(value) => {
+    const image = await hordesx.ggpoint(`n = ${value}`);
+    io.emit('plotbck', image);
+  });
+  
+  socket.on('disconnect', () => {
+    console.log('user disconnected');
+  });
+  
+});
+
+http.listen(2811, function () {
   console.log('Example app listening on port 2811!')
 })
