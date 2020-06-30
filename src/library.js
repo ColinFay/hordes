@@ -2,13 +2,7 @@ const child_process = require('child_process');
 const memoization = require('fast-memoize')
 const crypto = require('crypto');
 
-const library_mother = (pak, hash, process = 'Rscript', memoized = false) => {
-    if (hash !== null) {
-        let hash_got = get_hash(pak, process)
-        if (hash_got !== hash) {
-            throw new Error("Hash from DESCRIPTION doesn't match specified hash.")
-        }
-    }
+const library_mother = (pak, process = 'Rscript', memoized = false) => {
     var code = `cat(paste0('"', names(loadNamespace("${pak}")),'"', collapse = ","))`
     let funs = child_process.spawnSync(
         process, ['-e',
@@ -46,12 +40,12 @@ const library_mother = (pak, hash, process = 'Rscript', memoized = false) => {
     return functions_
 }
 
-const library = (package, hash = null, process = 'Rscript') => {
+const library = (package, process = 'Rscript') => {
     return library_mother(pak = package, hash = hash, process, memoized = false);
 }
 
-const mlibrary = (package, hash = null, process = 'Rscript') => {
-    return library_mother(pak = package, hash = hash, process, memoized = true);
+const mlibrary = (package, process = 'Rscript') => {
+    return library_mother(pak = package, process, memoized = true);
 }
 
 const get_hash = (package, process = 'Rscript') => {
@@ -67,8 +61,16 @@ const get_hash = (package, process = 'Rscript') => {
     return sha.digest('hex')
 }
 
+const check_hash = (package, hash, process = 'Rscript') => {
+    let hash_got = get_hash(package, process)
+    if (hash_got !== hash) {
+        throw new Error("Hash from DESCRIPTION doesn't match specified hash.")
+    }
+}
+
 module.exports = {
     library: library,
     mlibrary: mlibrary,
-    get_hash: get_hash
+    get_hash: get_hash,
+    check_hash: check_hash
 };

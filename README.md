@@ -174,7 +174,7 @@ remotes::install_github("colinfay/hordes", subdir = "r-hordes")
 Or directly from the modules with 
 
 ```
-npm run r-hordes-install
+cd node_modules/hordes/ && npm run r-hordes-install && cd ../..
 ```
 
 For example, to share images, you can create a function in a package (here named "`{hordex}`") that does: 
@@ -263,13 +263,14 @@ b: [1] 96 17  6  4 75
 
 ### `get_hash`
 
-When calling `library()` or `mlibrary()`, you can specify a hash, which can be compiled with `get_hash`. 
+Before calling `library()` or `mlibrary()`, you can check that the install package still match a hash previously compiled with `get_hash`. 
 This hash is computed from the `DESCRIPTION` of the package called. 
+
 That way, if ever the `DESCRIPTION` file changes (version update, or stuff like that...), you can get alerted (app won't launch). 
-Just ignore this param if you don't care about that (but you should in a production setting). 
+Just ignore this if you don't care about checking this has (but you should in a production setting, so you can be alerted that the package you are using stays the same). 
 
 ``` javascript
-const { library, get_hash } = require('hordes');
+const { check_hash, get_hash } = require('hordes');
 console.log(get_hash("golem"))
 ```
 
@@ -280,7 +281,7 @@ console.log(get_hash("golem"))
 Then if you call `library()` with another hash, the app will fail.
 
 ```javascript
-var golem = library("golem", hash = "blabla")
+check_hash("golem", "blabla")
 ```
 
 ```
@@ -288,7 +289,8 @@ var golem = library("golem", hash = "blabla")
 ```
 
 ```javascript
-var golem = library("golem", hash = 'e2167f289a708b2cd3b774dd9d041b9e4b6d75584b9421185eb8d80ca8af4d8a')
+check_hash("golem", 'e2167f289a708b2cd3b774dd9d041b9e4b6d75584b9421185eb8d80ca8af4d8a')
+var golem = library("golem",
 Object.keys(golem).length
 ```
 
