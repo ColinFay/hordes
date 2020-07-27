@@ -1,15 +1,19 @@
 const { spawn } = require('child_process');
 
-const waiter = (code, solve_on, error_on = "Error") => {
+const waiter = (code, options = {
+    solve_on: null,
+    error_on: "Error",
+    process: 'Rscript'
+}) => {
 
     return new Promise(function(resolve, reject) {
-        proc = spawn('Rscript', ['-e', code]);
+        proc = spawn(options.process, ['-e', code]);
 
         proc.stderr.on('data', (data) => {
-            if (data.includes(error_on)) {
+            if (data.includes(options.error_on)) {
                 reject(data.toString())
             }
-            if (data.includes(solve_on)) {
+            if (data.includes(options.solve_on)) {
                 resolve({
                     proc,
                     raw_output: data
@@ -18,10 +22,10 @@ const waiter = (code, solve_on, error_on = "Error") => {
         });
 
         proc.stdout.on('data', (data) => {
-            if (data.includes(error_on)) {
+            if (data.includes(options.error_on)) {
                 reject(data.toString())
             }
-            if (data.includes(solve_on)) {
+            if (data.includes(options.solve_on)) {
                 resolve({
                     proc,
                     raw_output: data
