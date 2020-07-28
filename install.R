@@ -1,15 +1,16 @@
 #!/usr/bin/env Rscript --vanilla
 (function(){
+    dir.create("rtemplib")
+    on.exit(unlink("rtemplib", TRUE, TRUE))
+
     if (!requireNamespace("remotes", quietly = TRUE)){
-        dir.create("rtemplib")
         install.packages("remotes", lib = "rtemplib", repos = "https://cloud.r-project.org/")
-        on.exit(unlink("rtemplib", TRUE))
+        library(remotes, lib.loc = "rtemplib")
+    } else {
+        library(remotes)
     }
-    
-    library(remotes, lib.loc = "rtemplib")
 
     install_github("colinfay/hordes", subdir = "r-hordes")
-    
-    install.packages("Rserve", repos = "https://cloud.r-project.org/")
+    install_cran("Rserve", repos = "https://cloud.r-project.org/")
 
 })()
