@@ -1,17 +1,12 @@
 const child_process = require('child_process');
 const memoization = require('fast-memoize')
 const crypto = require('crypto');
+const rio = require("rio");
 
-const library_mother = (pak, hash, process = 'Rscript', memoized = false) => {
-    if (hash !== null) {
-        let hash_got = get_hash(pak, process)
-        if (hash_got !== hash) {
-            throw new Error("Hash from DESCRIPTION doesn't match specified hash.")
-        }
-    }
+const library_mother = (pak, capture_output = true, memoized = false) => {
     var code = `cat(paste0('"', names(loadNamespace("${pak}")),'"', collapse = ","))`
     let funs = child_process.spawnSync(
-        process, ['-e',
+        "Rscript", ['-e',
             code
         ]
     );
@@ -19,24 +14,23 @@ const library_mother = (pak, hash, process = 'Rscript', memoized = false) => {
     functions_ = {};
 
     funs.map((fun) => {
-        functions_[fun] = function(code, options = {}) {
+        functions_[fun] = function(code, port = 6311) {
             if (code === undefined) {
                 code = ""
             }
+            code = `${pak}::${fun}(${code})`
+            if (capture_output) {
+                code = `capture.output(${code})`
+            }
             return new Promise(function(resolve, reject) {
-                child_process.exec(
-                    `${process} --vanilla -e '${pak}::${fun}(${code})'`,
-                    options,
-                    (error, stdout, stderr) => {
-                        if (error) {
-                            reject(error)
-                        }
-                        if (stderr) {
-                            reject(stderr)
-                        }
-                        resolve(stdout)
-                    }
-                );
+                rio.$e({
+                    command: code,
+                    port: port
+                }).then((res) => {
+                    resolve(res)
+                }).catch((error) => {
+                    reject(error)
+                });
             });
         };
         if (memoized) {
@@ -46,12 +40,21 @@ const library_mother = (pak, hash, process = 'Rscript', memoized = false) => {
     return functions_
 }
 
-const library = (package, hash = null, process = 'Rscript') => {
-    return library_mother(pak = package, hash = hash, process, memoized = false);
+const library = (
+    package,
+    options = {
+        capture_output: true
+    }
+) => {
+    return library_mother(pak = package, capture_output = options.capture_output, memoized = false);
 }
 
-const mlibrary = (package, hash = null, process = 'Rscript') => {
-    return library_mother(pak = package, hash = hash, process, memoized = true);
+const mlibrary = (
+    package, options = {
+        capture_output: true
+    }
+) => {
+    return library_mother(pak = package, capture_output = options.capture_output, memoized = true);
 }
 
 const get_hash = (package, process = 'Rscript') => {
@@ -67,8 +70,16 @@ const get_hash = (package, process = 'Rscript') => {
     return sha.digest('hex')
 }
 
+const check_hash = (package, hash, process = 'Rscript') => {
+    let hash_got = get_hash(package, process)
+    if (hash_got !== hash) {
+        throw new Error("Hash from DESCRIPTION doesn't match specified hash.")
+    }
+}
+
 module.exports = {
     library: library,
     mlibrary: mlibrary,
-    get_hash: get_hash
+    get_hash: get_hash,
+    check_hash: check_hash
 };

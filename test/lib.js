@@ -18,12 +18,12 @@ describe("lib", function() {
     it("library works when passed no params", async function() {
         const base = await library("base")
         const any = await base.any()
-        expect(any.toString()).to.equal("[1] FALSE\n")
+        expect(any.toString()).to.equal("[1] FALSE")
     });
 
     it("mlibrary works when passed no params", async function() {
         const mbase = await mlibrary("base")
         const any = await mbase.any()
-        expect(any.toString()).to.equal("[1] FALSE\n")
+        expect(any.toString()).to.equal("[1] FALSE")
     });
 });
