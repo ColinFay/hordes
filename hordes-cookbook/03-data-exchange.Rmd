@@ -44,7 +44,7 @@ const base = library("base");
 
 ## Text
 
-By default, everything is returned as a string. 
+By default, everything is returned as an array of string. 
 From the R side, it's better to print things with `cat`, as it allows to avoid the `[1] ` in front of the console printing. 
 
 ```{r}

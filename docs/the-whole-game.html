@@ -24,7 +24,7 @@
 <meta name="author" content="Colin Fay" />
 
 
-<meta name="date" content="2020-06-25" />
+<meta name="date" content="2020-07-28" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -135,11 +135,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="divider"></li>
 <li><a href="index.html#hordes-cookbook"><code>hordes</code> cookbook</a></li>
 <li class="chapter" data-level="1" data-path="the-whole-game.html"><a href="the-whole-game.html"><i class="fa fa-check"></i><b>1</b> The Whole Game</a><ul>
-<li class="chapter" data-level="1.1" data-path="the-whole-game.html"><a href="the-whole-game.html#library"><i class="fa fa-check"></i><b>1.1</b> <code>library</code></a></li>
-<li class="chapter" data-level="1.2" data-path="the-whole-game.html"><a href="the-whole-game.html#mlibrary"><i class="fa fa-check"></i><b>1.2</b> <code>mlibrary</code></a></li>
-<li class="chapter" data-level="1.3" data-path="the-whole-game.html"><a href="the-whole-game.html#get_hash"><i class="fa fa-check"></i><b>1.3</b> <code>get_hash</code></a></li>
-<li class="chapter" data-level="1.4" data-path="the-whole-game.html"><a href="the-whole-game.html#waiter"><i class="fa fa-check"></i><b>1.4</b> <code>waiter</code></a></li>
-<li class="chapter" data-level="1.5" data-path="the-whole-game.html"><a href="the-whole-game.html#changing-the-process-that-runs-r"><i class="fa fa-check"></i><b>1.5</b> Changing the process that runs R</a></li>
+<li class="chapter" data-level="1.1" data-path="the-whole-game.html"><a href="the-whole-game.html#hordes_init"><i class="fa fa-check"></i><b>1.1</b> <code>hordes_init</code></a></li>
+<li class="chapter" data-level="1.2" data-path="the-whole-game.html"><a href="the-whole-game.html#library"><i class="fa fa-check"></i><b>1.2</b> <code>library</code></a></li>
+<li class="chapter" data-level="1.3" data-path="the-whole-game.html"><a href="the-whole-game.html#mlibrary"><i class="fa fa-check"></i><b>1.3</b> <code>mlibrary</code></a></li>
+<li class="chapter" data-level="1.4" data-path="the-whole-game.html"><a href="the-whole-game.html#get_hash"><i class="fa fa-check"></i><b>1.4</b> <code>get_hash</code></a></li>
+<li class="chapter" data-level="1.5" data-path="the-whole-game.html"><a href="the-whole-game.html#waiter"><i class="fa fa-check"></i><b>1.5</b> <code>waiter</code></a></li>
+<li class="chapter" data-level="1.6" data-path="the-whole-game.html"><a href="the-whole-game.html#changing-the-process-that-runs-r"><i class="fa fa-check"></i><b>1.6</b> Changing the process that runs R</a></li>
 </ul></li>
 <li class="chapter" data-level="2" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>2</b> <code>hordes</code> philosophy</a><ul>
 <li class="chapter" data-level="2.1" data-path="intro.html"><a href="intro.html#general-philosophy"><i class="fa fa-check"></i><b>2.1</b> General Philosophy</a></li>
@@ -168,8 +169,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="5" data-path="building-a-web-app.html"><a href="building-a-web-app.html"><i class="fa fa-check"></i><b>5</b> Building a Web App</a><ul>
 <li class="chapter" data-level="5.1" data-path="building-a-web-app.html"><a href="building-a-web-app.html#example-2"><i class="fa fa-check"></i><b>5.1</b> Example</a><ul>
-<li class="chapter" data-level="5.1.1" data-path="building-a-web-app.html"><a href="building-a-web-app.html#using-http-request-slower"><i class="fa fa-check"></i><b>5.1.1</b> Using HTTP request (slower)</a></li>
-<li class="chapter" data-level="5.1.2" data-path="building-a-web-app.html"><a href="building-a-web-app.html#using-a-websocket"><i class="fa fa-check"></i><b>5.1.2</b> Using a Websocket</a></li>
+<li class="chapter" data-level="5.1.1" data-path="building-a-web-app.html"><a href="building-a-web-app.html#using-a-websocket"><i class="fa fa-check"></i><b>5.1.1</b> Using a Websocket</a></li>
+<li class="chapter" data-level="5.1.2" data-path="building-a-web-app.html"><a href="building-a-web-app.html#using-http-request-slower"><i class="fa fa-check"></i><b>5.1.2</b> Using HTTP request (slower)</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="6" data-path="benchmark.html"><a href="benchmark.html"><i class="fa fa-check"></i><b>6</b> Benchmark</a></li>
@@ -199,23 +200,32 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>This chapter will give you a quick and (I hope) complete overview of what you can do with <code>hordes</code>.
 This chapter is supposed to be an introduction and won’t go into details on all the functions.
 Please refer to further chapters if you want to know more!</p>
+<div id="hordes_init" class="section level2">
+<h2><span class="header-section-number">1.1</span> <code>hordes_init</code></h2>
+<p>The <code>library()</code> and <code>mlibrary()</code> functions will be talking to <a href="https://www.rforge.net/Rserve/doc.html">RServe</a> through <a href="https://github.com/albertosantini/node-rio">node-rio</a>.
+You can either launch Rserve by hand, or from Node by calling <code>hordes_init()</code> at the top of your script if you want to lauch it.</p>
+<p>You can serve several instances of RServe, by calling <code>hordes_init(port = XXX)</code> where <code>XXX</code> is a port.
+That also mean that you can open and call several instances of RServe using a Node load balancer.</p>
+</div>
 <div id="library" class="section level2">
-<h2><span class="header-section-number">1.1</span> <code>library</code></h2>
+<h2><span class="header-section-number">1.2</span> <code>library</code></h2>
 <p>The <code>library</code> function from <code>hordes</code> takes as input an installed R package and returns an object with all the functions from that package as methods.</p>
-<p>For example, here is how to run a <code>lm</code> from Node.</p>
-<p><strong>Note that every function returns a promise, where R <code>stderr</code> rejects the promise and <code>stdout</code> resolves it.</strong>
-Also, the return value is in string format.</p>
+<p>**Note that every function returns a promise,</p>
 <p>This means that:</p>
 <ul>
 <li>R fun output should be handled with <code>then/catch</code> or <code>async/await</code></li>
-<li>Everything written by R to <code>stderr</code> will reject, and everything written to <code>stdout</code> resolve</li>
+<li>All function will return as an array of strings, unless you specify <code>capture_output = false</code>, then you rely on <code>node-rio</code> to do the conversion.
+This solution might make things faster if you’re concerned about very high scalability.</li>
 <li>If you return a data format that is not to be treated as a string (JSON, number…)… you’ll have to transform the data to a JavaScript compatible format.</li>
 </ul>
-<div class="sourceCode" id="cb1"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb1-1"><a href="the-whole-game.html#cb1-1"></a><span class="kw">const</span> <span class="op">{</span>library<span class="op">}</span> <span class="op">=</span> <span class="at">require</span>(<span class="st">&#39;hordes&#39;</span>)<span class="op">;</span></span>
-<span id="cb1-2"><a href="the-whole-game.html#cb1-2"></a><span class="kw">const</span> stats <span class="op">=</span> <span class="at">library</span>(pak <span class="op">=</span> <span class="st">&quot;stats&quot;</span>)<span class="op">;</span></span>
-<span id="cb1-3"><a href="the-whole-game.html#cb1-3"></a><span class="va">stats</span>.<span class="at">lm</span>(<span class="st">&quot;Sepal.Length ~ Sepal.Width, data = iris&quot;</span>).</span>
-<span id="cb1-4"><a href="the-whole-game.html#cb1-4"></a>    <span class="at">then</span>((e) <span class="kw">=&gt;</span> <span class="va">console</span>.<span class="at">log</span>(e)).</span>
-<span id="cb1-5"><a href="the-whole-game.html#cb1-5"></a>    <span class="cf">catch</span>((err) <span class="kw">=&gt;</span> <span class="va">console</span>.<span class="at">error</span>(err))</span></code></pre></div>
+<p>For example, here is how to run a <code>lm</code> from Node.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb1-1"><a href="the-whole-game.html#cb1-1"></a><span class="co">// Here, we suppose you already have Rserve running in the background on port 6311</span></span>
+<span id="cb1-2"><a href="the-whole-game.html#cb1-2"></a><span class="kw">const</span> <span class="op">{</span>library<span class="op">}</span> <span class="op">=</span> <span class="at">require</span>(<span class="st">&#39;hordes&#39;</span>)<span class="op">;</span></span>
+<span id="cb1-3"><a href="the-whole-game.html#cb1-3"></a><span class="kw">const</span> stats <span class="op">=</span> <span class="at">library</span>(<span class="im">package</span> <span class="op">=</span> <span class="st">&quot;stats&quot;</span>)<span class="op">;</span></span>
+<span id="cb1-4"><a href="the-whole-game.html#cb1-4"></a></span>
+<span id="cb1-5"><a href="the-whole-game.html#cb1-5"></a><span class="va">stats</span>.<span class="at">lm</span>(<span class="st">&quot;Sepal.Length ~ Sepal.Width, data = iris&quot;</span>)</span>
+<span id="cb1-6"><a href="the-whole-game.html#cb1-6"></a>    .<span class="at">then</span>((e) <span class="kw">=&gt;</span> <span class="va">console</span>.<span class="at">log</span>(<span class="va">e</span>.<span class="at">join</span>(<span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)))</span>
+<span id="cb1-7"><a href="the-whole-game.html#cb1-7"></a>    .<span class="at">catch</span>((err) <span class="kw">=&gt;</span> <span class="va">console</span>.<span class="at">error</span>(err))</span></code></pre></div>
 <p>Will output to the console:</p>
 <pre><code>Call:
 stats::lm(formula = Sepal.Length ~ Sepal.Width, data = iris)
@@ -228,23 +238,25 @@ Coefficients:
 <span id="cb3-2"><a href="the-whole-game.html#cb3-2"></a><span class="kw">const</span> stats <span class="op">=</span> <span class="at">library</span>(<span class="st">&quot;stats&quot;</span>)<span class="op">;</span></span>
 <span id="cb3-3"><a href="the-whole-game.html#cb3-3"></a></span>
 <span id="cb3-4"><a href="the-whole-game.html#cb3-4"></a>(<span class="kw">async</span>() <span class="kw">=&gt;</span> <span class="op">{</span></span>
-<span id="cb3-5"><a href="the-whole-game.html#cb3-5"></a>    <span class="cf">try</span> <span class="op">{</span></span>
-<span id="cb3-6"><a href="the-whole-game.html#cb3-6"></a>        <span class="kw">const</span> a <span class="op">=</span> <span class="cf">await</span> <span class="va">stats</span>.<span class="at">lm</span>(<span class="st">&quot;Sepal.Length ~ Sepal.Width, data = iris&quot;</span>)</span>
-<span id="cb3-7"><a href="the-whole-game.html#cb3-7"></a>        <span class="va">console</span>.<span class="at">log</span>(a)</span>
-<span id="cb3-8"><a href="the-whole-game.html#cb3-8"></a>    <span class="op">}</span> <span class="cf">catch</span> (e) <span class="op">{</span></span>
-<span id="cb3-9"><a href="the-whole-game.html#cb3-9"></a>        <span class="va">console</span>.<span class="at">log</span>(e)</span>
-<span id="cb3-10"><a href="the-whole-game.html#cb3-10"></a>    <span class="op">}</span></span>
-<span id="cb3-11"><a href="the-whole-game.html#cb3-11"></a></span>
-<span id="cb3-12"><a href="the-whole-game.html#cb3-12"></a>    <span class="cf">try</span> <span class="op">{</span></span>
-<span id="cb3-13"><a href="the-whole-game.html#cb3-13"></a>        <span class="kw">const</span> a <span class="op">=</span> <span class="va">stats</span>.<span class="at">lm</span>(<span class="st">&quot;Sepal.Length ~ Sepal.Width, data = iris&quot;</span>)</span>
-<span id="cb3-14"><a href="the-whole-game.html#cb3-14"></a>        <span class="kw">const</span> b <span class="op">=</span> <span class="va">stats</span>.<span class="at">lm</span>(<span class="st">&quot;Sepal.Length ~ Petal.Width, data = iris&quot;</span>)</span>
-<span id="cb3-15"><a href="the-whole-game.html#cb3-15"></a>        <span class="kw">const</span> ab <span class="op">=</span> <span class="cf">await</span> <span class="va">Promise</span>.<span class="at">all</span>([a<span class="op">,</span> b])</span>
-<span id="cb3-16"><a href="the-whole-game.html#cb3-16"></a>        <span class="va">console</span>.<span class="at">log</span>(ab[<span class="dv">0</span>])</span>
-<span id="cb3-17"><a href="the-whole-game.html#cb3-17"></a>        <span class="va">console</span>.<span class="at">log</span>(ab[<span class="dv">1</span>])</span>
-<span id="cb3-18"><a href="the-whole-game.html#cb3-18"></a>    <span class="op">}</span> <span class="cf">catch</span> (e) <span class="op">{</span></span>
-<span id="cb3-19"><a href="the-whole-game.html#cb3-19"></a>        <span class="va">console</span>.<span class="at">log</span>(e)</span>
-<span id="cb3-20"><a href="the-whole-game.html#cb3-20"></a>    <span class="op">}</span></span>
-<span id="cb3-21"><a href="the-whole-game.html#cb3-21"></a><span class="op">}</span>)()<span class="op">;</span></span></code></pre></div>
+<span id="cb3-5"><a href="the-whole-game.html#cb3-5"></a><span class="co">// Launching RServe from Node</span></span>
+<span id="cb3-6"><a href="the-whole-game.html#cb3-6"></a>    <span class="cf">await</span> <span class="at">hordes_init</span>()<span class="op">;</span></span>
+<span id="cb3-7"><a href="the-whole-game.html#cb3-7"></a>    <span class="cf">try</span> <span class="op">{</span></span>
+<span id="cb3-8"><a href="the-whole-game.html#cb3-8"></a>        <span class="kw">const</span> a <span class="op">=</span> <span class="cf">await</span> <span class="va">stats</span>.<span class="at">lm</span>(<span class="st">&quot;Sepal.Length ~ Sepal.Width, data = iris&quot;</span>)</span>
+<span id="cb3-9"><a href="the-whole-game.html#cb3-9"></a>        <span class="va">console</span>.<span class="at">log</span>(a)</span>
+<span id="cb3-10"><a href="the-whole-game.html#cb3-10"></a>    <span class="op">}</span> <span class="cf">catch</span> (e) <span class="op">{</span></span>
+<span id="cb3-11"><a href="the-whole-game.html#cb3-11"></a>        <span class="va">console</span>.<span class="at">log</span>(e)</span>
+<span id="cb3-12"><a href="the-whole-game.html#cb3-12"></a>    <span class="op">}</span></span>
+<span id="cb3-13"><a href="the-whole-game.html#cb3-13"></a></span>
+<span id="cb3-14"><a href="the-whole-game.html#cb3-14"></a>    <span class="cf">try</span> <span class="op">{</span></span>
+<span id="cb3-15"><a href="the-whole-game.html#cb3-15"></a>        <span class="kw">const</span> a <span class="op">=</span> <span class="va">stats</span>.<span class="at">lm</span>(<span class="st">&quot;Sepal.Length ~ Sepal.Width, data = iris&quot;</span>)</span>
+<span id="cb3-16"><a href="the-whole-game.html#cb3-16"></a>        <span class="kw">const</span> b <span class="op">=</span> <span class="va">stats</span>.<span class="at">lm</span>(<span class="st">&quot;Sepal.Length ~ Petal.Width, data = iris&quot;</span>)</span>
+<span id="cb3-17"><a href="the-whole-game.html#cb3-17"></a>        <span class="kw">const</span> ab <span class="op">=</span> <span class="cf">await</span> <span class="va">Promise</span>.<span class="at">all</span>([a<span class="op">,</span> b])</span>
+<span id="cb3-18"><a href="the-whole-game.html#cb3-18"></a>        <span class="va">console</span>.<span class="at">log</span>(ab[<span class="dv">0</span>])</span>
+<span id="cb3-19"><a href="the-whole-game.html#cb3-19"></a>        <span class="va">console</span>.<span class="at">log</span>(ab[<span class="dv">1</span>])</span>
+<span id="cb3-20"><a href="the-whole-game.html#cb3-20"></a>    <span class="op">}</span> <span class="cf">catch</span> (e) <span class="op">{</span></span>
+<span id="cb3-21"><a href="the-whole-game.html#cb3-21"></a>        <span class="va">console</span>.<span class="at">log</span>(e)</span>
+<span id="cb3-22"><a href="the-whole-game.html#cb3-22"></a>    <span class="op">}</span></span>
+<span id="cb3-23"><a href="the-whole-game.html#cb3-23"></a><span class="op">}</span>)()<span class="op">;</span></span></code></pre></div>
 <pre><code>Call:
 stats::lm(formula = Sepal.Length ~ Sepal.Width, data = iris)
 
@@ -271,32 +283,34 @@ Coefficients:
      4.7776       0.8886 </code></pre>
 </div>
 <div id="mlibrary" class="section level2">
-<h2><span class="header-section-number">1.2</span> <code>mlibrary</code></h2>
+<h2><span class="header-section-number">1.3</span> <code>mlibrary</code></h2>
 <p><code>mlibrary</code> does the same job as <code>library</code> except the functions are natively memoized.</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb5-1"><a href="the-whole-game.html#cb5-1"></a><span class="kw">const</span> <span class="op">{</span>library<span class="op">,</span> mlibrary<span class="op">}</span> <span class="op">=</span> <span class="at">require</span>(<span class="st">&#39;hordes&#39;</span>)<span class="op">;</span></span>
-<span id="cb5-2"><a href="the-whole-game.html#cb5-2"></a><span class="kw">const</span> base <span class="op">=</span> <span class="at">library</span>(<span class="st">&quot;base&quot;</span>)<span class="op">;</span></span>
-<span id="cb5-3"><a href="the-whole-game.html#cb5-3"></a><span class="kw">const</span> mbase <span class="op">=</span> <span class="at">mlibrary</span>(<span class="st">&quot;base&quot;</span>)<span class="op">;</span></span>
-<span id="cb5-4"><a href="the-whole-game.html#cb5-4"></a></span>
-<span id="cb5-5"><a href="the-whole-game.html#cb5-5"></a>(<span class="kw">async</span> () <span class="kw">=&gt;</span> <span class="op">{</span></span>
-<span id="cb5-6"><a href="the-whole-game.html#cb5-6"></a>    <span class="cf">try</span> <span class="op">{</span></span>
-<span id="cb5-7"><a href="the-whole-game.html#cb5-7"></a>            <span class="kw">const</span> a <span class="op">=</span> <span class="cf">await</span> <span class="va">base</span>.<span class="at">sample</span>(<span class="st">&quot;1:100, 5&quot;</span>)</span>
-<span id="cb5-8"><a href="the-whole-game.html#cb5-8"></a>            <span class="va">console</span>.<span class="at">log</span>(<span class="st">&quot;a:&quot;</span><span class="op">,</span> a)</span>
-<span id="cb5-9"><a href="the-whole-game.html#cb5-9"></a>            <span class="kw">const</span> b <span class="op">=</span> <span class="cf">await</span> <span class="va">base</span>.<span class="at">sample</span>(<span class="st">&quot;1:100, 5&quot;</span>)</span>
-<span id="cb5-10"><a href="the-whole-game.html#cb5-10"></a>            <span class="va">console</span>.<span class="at">log</span>(<span class="st">&quot;b:&quot;</span><span class="op">,</span> b)</span>
-<span id="cb5-11"><a href="the-whole-game.html#cb5-11"></a>        <span class="op">}</span> <span class="cf">catch</span>(e)<span class="op">{</span></span>
-<span id="cb5-12"><a href="the-whole-game.html#cb5-12"></a>            <span class="va">console</span>.<span class="at">log</span>(e)</span>
-<span id="cb5-13"><a href="the-whole-game.html#cb5-13"></a>        <span class="op">}</span></span>
-<span id="cb5-14"><a href="the-whole-game.html#cb5-14"></a></span>
-<span id="cb5-15"><a href="the-whole-game.html#cb5-15"></a>    <span class="cf">try</span> <span class="op">{</span></span>
-<span id="cb5-16"><a href="the-whole-game.html#cb5-16"></a>            <span class="kw">const</span> a <span class="op">=</span> <span class="cf">await</span> <span class="va">mbase</span>.<span class="at">sample</span>(<span class="st">&quot;1:100, 5&quot;</span>)</span>
-<span id="cb5-17"><a href="the-whole-game.html#cb5-17"></a>            <span class="va">console</span>.<span class="at">log</span>(<span class="st">&quot;a:&quot;</span><span class="op">,</span> a)</span>
-<span id="cb5-18"><a href="the-whole-game.html#cb5-18"></a>            <span class="kw">const</span> b <span class="op">=</span> <span class="cf">await</span> <span class="va">mbase</span>.<span class="at">sample</span>(<span class="st">&quot;1:100, 5&quot;</span>)</span>
-<span id="cb5-19"><a href="the-whole-game.html#cb5-19"></a>            <span class="va">console</span>.<span class="at">log</span>(<span class="st">&quot;b:&quot;</span><span class="op">,</span> b)</span>
-<span id="cb5-20"><a href="the-whole-game.html#cb5-20"></a>        <span class="op">}</span> <span class="cf">catch</span>(e)<span class="op">{</span></span>
-<span id="cb5-21"><a href="the-whole-game.html#cb5-21"></a>            <span class="va">console</span>.<span class="at">log</span>(e)</span>
-<span id="cb5-22"><a href="the-whole-game.html#cb5-22"></a>        <span class="op">}</span></span>
-<span id="cb5-23"><a href="the-whole-game.html#cb5-23"></a><span class="op">}</span></span>
-<span id="cb5-24"><a href="the-whole-game.html#cb5-24"></a>)()<span class="op">;</span></span></code></pre></div>
+<p><strong>Unless your data are changing between each function call</strong>, this is probably the mode you’d want to chose.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb5-1"><a href="the-whole-game.html#cb5-1"></a><span class="co">// Here, we suppose you already have Rserve running in the background on port 6311</span></span>
+<span id="cb5-2"><a href="the-whole-game.html#cb5-2"></a><span class="kw">const</span> <span class="op">{</span>library<span class="op">,</span> mlibrary<span class="op">}</span> <span class="op">=</span> <span class="at">require</span>(<span class="st">&#39;hordes&#39;</span>)<span class="op">;</span></span>
+<span id="cb5-3"><a href="the-whole-game.html#cb5-3"></a><span class="kw">const</span> base <span class="op">=</span> <span class="at">library</span>(<span class="st">&quot;base&quot;</span>)<span class="op">;</span></span>
+<span id="cb5-4"><a href="the-whole-game.html#cb5-4"></a><span class="kw">const</span> mbase <span class="op">=</span> <span class="at">mlibrary</span>(<span class="st">&quot;base&quot;</span>)<span class="op">;</span></span>
+<span id="cb5-5"><a href="the-whole-game.html#cb5-5"></a></span>
+<span id="cb5-6"><a href="the-whole-game.html#cb5-6"></a>(<span class="kw">async</span> () <span class="kw">=&gt;</span> <span class="op">{</span></span>
+<span id="cb5-7"><a href="the-whole-game.html#cb5-7"></a>    <span class="cf">try</span> <span class="op">{</span></span>
+<span id="cb5-8"><a href="the-whole-game.html#cb5-8"></a>            <span class="kw">const</span> a <span class="op">=</span> <span class="cf">await</span> <span class="va">base</span>.<span class="at">sample</span>(<span class="st">&quot;1:100, 5&quot;</span>)</span>
+<span id="cb5-9"><a href="the-whole-game.html#cb5-9"></a>            <span class="va">console</span>.<span class="at">log</span>(<span class="st">&quot;a:&quot;</span><span class="op">,</span> a)</span>
+<span id="cb5-10"><a href="the-whole-game.html#cb5-10"></a>            <span class="kw">const</span> b <span class="op">=</span> <span class="cf">await</span> <span class="va">base</span>.<span class="at">sample</span>(<span class="st">&quot;1:100, 5&quot;</span>)</span>
+<span id="cb5-11"><a href="the-whole-game.html#cb5-11"></a>            <span class="va">console</span>.<span class="at">log</span>(<span class="st">&quot;b:&quot;</span><span class="op">,</span> b)</span>
+<span id="cb5-12"><a href="the-whole-game.html#cb5-12"></a>        <span class="op">}</span> <span class="cf">catch</span>(e)<span class="op">{</span></span>
+<span id="cb5-13"><a href="the-whole-game.html#cb5-13"></a>            <span class="va">console</span>.<span class="at">log</span>(e)</span>
+<span id="cb5-14"><a href="the-whole-game.html#cb5-14"></a>        <span class="op">}</span></span>
+<span id="cb5-15"><a href="the-whole-game.html#cb5-15"></a></span>
+<span id="cb5-16"><a href="the-whole-game.html#cb5-16"></a>    <span class="cf">try</span> <span class="op">{</span></span>
+<span id="cb5-17"><a href="the-whole-game.html#cb5-17"></a>            <span class="kw">const</span> a <span class="op">=</span> <span class="cf">await</span> <span class="va">mbase</span>.<span class="at">sample</span>(<span class="st">&quot;1:100, 5&quot;</span>)</span>
+<span id="cb5-18"><a href="the-whole-game.html#cb5-18"></a>            <span class="va">console</span>.<span class="at">log</span>(<span class="st">&quot;a:&quot;</span><span class="op">,</span> a)</span>
+<span id="cb5-19"><a href="the-whole-game.html#cb5-19"></a>            <span class="kw">const</span> b <span class="op">=</span> <span class="cf">await</span> <span class="va">mbase</span>.<span class="at">sample</span>(<span class="st">&quot;1:100, 5&quot;</span>)</span>
+<span id="cb5-20"><a href="the-whole-game.html#cb5-20"></a>            <span class="va">console</span>.<span class="at">log</span>(<span class="st">&quot;b:&quot;</span><span class="op">,</span> b)</span>
+<span id="cb5-21"><a href="the-whole-game.html#cb5-21"></a>        <span class="op">}</span> <span class="cf">catch</span>(e)<span class="op">{</span></span>
+<span id="cb5-22"><a href="the-whole-game.html#cb5-22"></a>            <span class="va">console</span>.<span class="at">log</span>(e)</span>
+<span id="cb5-23"><a href="the-whole-game.html#cb5-23"></a>        <span class="op">}</span></span>
+<span id="cb5-24"><a href="the-whole-game.html#cb5-24"></a><span class="op">}</span></span>
+<span id="cb5-25"><a href="the-whole-game.html#cb5-25"></a>)()<span class="op">;</span></span></code></pre></div>
 <pre><code>a: [1] 49 13 37 25 91
 
 b: [1]  5 17 68 26 29
@@ -306,7 +320,7 @@ a: [1] 96 17  6  4 75
 b: [1] 96 17  6  4 75</code></pre>
 </div>
 <div id="get_hash" class="section level2">
-<h2><span class="header-section-number">1.3</span> <code>get_hash</code></h2>
+<h2><span class="header-section-number">1.4</span> <code>get_hash</code></h2>
 <p>When calling <code>library()</code> or <code>mlibrary()</code>, you can specify a hash, which can be compiled with <code>get_hash</code>.
 This hash is computed from the <code>DESCRIPTION</code> of the package called.
 That way, if ever the <code>DESCRIPTION</code> file changes (version update, or stuff like that…), you can get alerted (app won’t launch).
@@ -322,8 +336,9 @@ Just ignore this param if you don’t care about that (but you should in a produ
 <pre><code>104</code></pre>
 </div>
 <div id="waiter" class="section level2">
-<h2><span class="header-section-number">1.4</span> <code>waiter</code></h2>
-<p>You can launch an R process that streams data and wait for a specific output in the stdout.</p>
+<h2><span class="header-section-number">1.5</span> <code>waiter</code></h2>
+<p>You can launch an R process that streams data and wait for a specific output in the stdout.
+The specificity of <code>waiter</code> is that it doesn’t rely on <code>node-rio</code>, but spawn a real R process, and reads the elements streamed on stdout.</p>
 <p>The promise resolves with and <code>{proc, raw_output}</code>: <code>proc</code> is the process object created by Node, <code>raw_output</code> is the output buffer, that can be turned to string with <code>.toString()</code>.</p>
 <p>A streaming process here is considered in a lose sense: what we mean here is anything that prints various elements to the console.
 For example, when you create a new application using the <code>{golem}</code> package, the app is ready once this last line is printed to the console.
@@ -346,7 +361,7 @@ This is exactly what <code>waiter</code> does, it waits for this last line to be
 <span id="cb14-4"><a href="the-whole-game.html#cb14-4"></a></span>
 <span id="cb14-5"><a href="the-whole-game.html#cb14-5"></a><span class="va">app</span>.<span class="at">get</span>(<span class="st">&#39;/creategolem&#39;</span><span class="op">,</span> <span class="kw">async</span>(req<span class="op">,</span> res) <span class="kw">=&gt;</span> <span class="op">{</span></span>
 <span id="cb14-6"><a href="the-whole-game.html#cb14-6"></a>    <span class="cf">try</span> <span class="op">{</span></span>
-<span id="cb14-7"><a href="the-whole-game.html#cb14-7"></a>        <span class="cf">await</span> <span class="at">waiter</span>(<span class="st">&quot;golem::create_golem(&#39;pouet&#39;)&quot;</span><span class="op">,</span> solve_on <span class="op">=</span> <span class="st">&quot;To continue working on your app&quot;</span>)<span class="op">;</span></span>
+<span id="cb14-7"><a href="the-whole-game.html#cb14-7"></a>        <span class="cf">await</span> <span class="at">waiter</span>(<span class="st">&quot;golem::create_golem(&#39;pouet&#39;)&quot;</span><span class="op">,</span> <span class="op">{</span><span class="dt">solve_on</span><span class="op">:</span> <span class="st">&quot;To continue working on your app&quot;</span><span class="op">}</span>)<span class="op">;</span></span>
 <span id="cb14-8"><a href="the-whole-game.html#cb14-8"></a>        <span class="va">res</span>.<span class="at">send</span>(<span class="st">&quot;Created &quot;</span>)</span>
 <span id="cb14-9"><a href="the-whole-game.html#cb14-9"></a>    <span class="op">}</span> <span class="cf">catch</span> (e) <span class="op">{</span></span>
 <span id="cb14-10"><a href="the-whole-game.html#cb14-10"></a>        <span class="va">console</span>.<span class="at">log</span>(e)</span>
@@ -360,19 +375,25 @@ This is exactly what <code>waiter</code> does, it waits for this last line to be
 <p>-&gt; <a href="http://localhost:2811/creategolem" class="uri">http://localhost:2811/creategolem</a></p>
 </div>
 <div id="changing-the-process-that-runs-r" class="section level2">
-<h2><span class="header-section-number">1.5</span> Changing the process that runs R</h2>
+<h2><span class="header-section-number">1.6</span> Changing the process that runs R</h2>
 <p>By default, the R code is launched by <code>RScript</code>, but you can specify another (for example if you need another version of R):</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb15-1"><a href="the-whole-game.html#cb15-1"></a><span class="kw">const</span> <span class="op">{</span> library <span class="op">}</span> <span class="op">=</span> <span class="at">require</span>(<span class="st">&#39;hordes&#39;</span>)<span class="op">;</span></span>
-<span id="cb15-2"><a href="the-whole-game.html#cb15-2"></a><span class="kw">const</span> base <span class="op">=</span> <span class="at">library</span>(<span class="st">&quot;base&quot;</span><span class="op">,</span> hash <span class="op">=</span> <span class="kw">null</span><span class="op">,</span> process <span class="op">=</span> <span class="st">&#39;/usr/local/bin/RScript&#39;</span>)<span class="op">;</span></span>
-<span id="cb15-3"><a href="the-whole-game.html#cb15-3"></a></span>
-<span id="cb15-4"><a href="the-whole-game.html#cb15-4"></a>(<span class="kw">async</span>() <span class="kw">=&gt;</span> <span class="op">{</span></span>
-<span id="cb15-5"><a href="the-whole-game.html#cb15-5"></a>    <span class="cf">try</span> <span class="op">{</span></span>
-<span id="cb15-6"><a href="the-whole-game.html#cb15-6"></a>        <span class="kw">const</span> a <span class="op">=</span> <span class="cf">await</span> <span class="va">base</span>.<span class="at">sample</span>(<span class="st">&quot;1:100, 5&quot;</span>)</span>
-<span id="cb15-7"><a href="the-whole-game.html#cb15-7"></a>        <span class="va">console</span>.<span class="at">log</span>(<span class="st">&quot;a:&quot;</span><span class="op">,</span> a)</span>
-<span id="cb15-8"><a href="the-whole-game.html#cb15-8"></a>    <span class="op">}</span> <span class="cf">catch</span> (e) <span class="op">{</span></span>
-<span id="cb15-9"><a href="the-whole-game.html#cb15-9"></a>        <span class="va">console</span>.<span class="at">log</span>(e)</span>
-<span id="cb15-10"><a href="the-whole-game.html#cb15-10"></a>    <span class="op">}</span></span>
-<span id="cb15-11"><a href="the-whole-game.html#cb15-11"></a><span class="op">}</span>)()<span class="op">;</span></span></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb15-1"><a href="the-whole-game.html#cb15-1"></a><span class="kw">const</span> <span class="op">{</span> waiter <span class="op">}</span> <span class="op">=</span> <span class="at">require</span>(<span class="st">&quot;hordes&quot;</span>)</span>
+<span id="cb15-2"><a href="the-whole-game.html#cb15-2"></a><span class="kw">const</span> express <span class="op">=</span> <span class="at">require</span>(<span class="st">&#39;express&#39;</span>)<span class="op">;</span></span>
+<span id="cb15-3"><a href="the-whole-game.html#cb15-3"></a><span class="kw">const</span> app <span class="op">=</span> <span class="at">express</span>()<span class="op">;</span></span>
+<span id="cb15-4"><a href="the-whole-game.html#cb15-4"></a></span>
+<span id="cb15-5"><a href="the-whole-game.html#cb15-5"></a><span class="va">app</span>.<span class="at">get</span>(<span class="st">&#39;/creategolem&#39;</span><span class="op">,</span> <span class="kw">async</span>(req<span class="op">,</span> res) <span class="kw">=&gt;</span> <span class="op">{</span></span>
+<span id="cb15-6"><a href="the-whole-game.html#cb15-6"></a>    <span class="cf">try</span> <span class="op">{</span></span>
+<span id="cb15-7"><a href="the-whole-game.html#cb15-7"></a>        <span class="cf">await</span> <span class="at">waiter</span>(<span class="st">&quot;golem::create_golem(&#39;pouet&#39;)&quot;</span><span class="op">,</span> <span class="op">{</span><span class="dt">solve_on</span><span class="op">:</span> <span class="st">&quot;To continue working on your app&quot;</span><span class="op">,</span> <span class="dt">process</span><span class="op">:</span> <span class="st">&#39;/usr/local/bin/RScript&#39;</span><span class="op">}</span>)<span class="op">;</span></span>
+<span id="cb15-8"><a href="the-whole-game.html#cb15-8"></a>        <span class="va">res</span>.<span class="at">send</span>(<span class="st">&quot;Created &quot;</span>)</span>
+<span id="cb15-9"><a href="the-whole-game.html#cb15-9"></a>    <span class="op">}</span> <span class="cf">catch</span> (e) <span class="op">{</span></span>
+<span id="cb15-10"><a href="the-whole-game.html#cb15-10"></a>        <span class="va">console</span>.<span class="at">log</span>(e)</span>
+<span id="cb15-11"><a href="the-whole-game.html#cb15-11"></a>        <span class="va">res</span>.<span class="at">status</span>(<span class="dv">500</span>).<span class="at">send</span>(<span class="st">&quot;Error creating the golem project&quot;</span>)</span>
+<span id="cb15-12"><a href="the-whole-game.html#cb15-12"></a>    <span class="op">}</span></span>
+<span id="cb15-13"><a href="the-whole-game.html#cb15-13"></a><span class="op">}</span>)</span>
+<span id="cb15-14"><a href="the-whole-game.html#cb15-14"></a></span>
+<span id="cb15-15"><a href="the-whole-game.html#cb15-15"></a><span class="va">app</span>.<span class="at">listen</span>(<span class="dv">2811</span><span class="op">,</span> <span class="kw">function</span>() <span class="op">{</span></span>
+<span id="cb15-16"><a href="the-whole-game.html#cb15-16"></a>    <span class="va">console</span>.<span class="at">log</span>(<span class="st">&#39;Example app listening on port 2811!&#39;</span>)</span>
+<span id="cb15-17"><a href="the-whole-game.html#cb15-17"></a><span class="op">}</span>)</span></code></pre></div>
 
 </div>
 </div>
