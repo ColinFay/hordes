@@ -1,6 +1,6 @@
 {
     "name": "hordes",
-    "version": "0.2.0",
+    "version": "0.2.1",
     "description": "Call R from NodeJS, the smart way.",
     "main": "index.js",
     "keywords": [

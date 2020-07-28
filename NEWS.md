@@ -1,4 +1,4 @@
-# hordes 0.2.0
+# hordes 0.2.1
 
 + `hordes` now relies on RServer for its backend
 + The `{hordes}` R package is now installed by default when the node module is installed

@@ -1,4 +1,4 @@
-# hordes
+# hordes 0.2.1
 
 R from NodeJS, the right way.
 
