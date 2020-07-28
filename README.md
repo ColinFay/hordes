@@ -1,4 +1,4 @@
-# hordes
+*# hordes
 
 R from NodeJS, the right way.
 
@@ -39,6 +39,14 @@ Examples below will probably make this idea clearer.
 
 The `hordes` module contains the following functions:
 
+#### `hordes_init`
+
+The `library()` and `mlibrary()` functions will be talking to [RServe](https://www.rforge.net/Rserve/doc.html) through [node-rio](https://github.com/albertosantini/node-rio).
+You can either launch Rserve by hand, or from Node by calling `hordes_init()` at the top of your script if you want to lauch it. 
+
+You can serve several instances of RServe, by calling `hordes_init(port = XXX)` where `XXX` is a port.
+That also mean that you can open and call several instances of RServe using a Node load balancer.
+
 #### `library`
 
 `library` behaves as R `library()` function, except that the output is a JavaScript object with all the functions from the package. 
@@ -48,17 +56,16 @@ By doing `const stats = library("stats");`, you will have access to all the func
 
 > Note that if you want to call functions with dot (for example `as.numeric()`), you should do it using the `[` notation, not the dot one (i.e `base['as.numeric']`, not `base.as.numeric`).
 
-Calling `stats.lm("code")` will launch R, run `stats::lm("code")` and return the output to Node. 
-
-**Note that every function returns a promise, where R `stderr` rejects the promise  and `stdout` resolves it.**
-This point is kind of important to keep in mind if you're building your own package that will be then called through `hordes`.
+Calling `stats.lm("code")` will launch R, run `stats::lm("code")` and return the output to Node.
 
 ``` javascript 
+// Here, we suppose you already have Rserve running in the background on port 6311
 const {library} = require('hordes');
-const stats = library(pak = "stats");
-stats.lm("Sepal.Length ~ Sepal.Width, data = iris").
-    then((e) => console.log(e)).
-    catch((err) => console.error(err))
+const stats = library(package = "stats");
+
+stats.lm("Sepal.Length ~ Sepal.Width, data = iris")
+    .then((e) => console.log(e.join("\n")))
+    .catch((err) => console.error(err))
 ```
 
 ```
@@ -74,13 +81,17 @@ As they are promises, you can use them in an async/await pattern or with `then/c
 The rest of this README will use `async/await`
 
 ``` javascript
-const { library } = require('hordes');
+const { library, hordes_init } = require('hordes');
 const stats = library("stats");
 
 (async() => {
+
+    // You can ignore this if you already have Rserve running on the background
+    await hordes_init();
+
     try {
         const a = await stats.lm("Sepal.Length ~ Sepal.Width, data = iris")
-        console.log(a)
+        console.log(a.join("\n"))
     } catch (e) {
         console.log(e)
     }
@@ -89,8 +100,8 @@ const stats = library("stats");
         const a = stats.lm("Sepal.Length ~ Sepal.Width, data = iris")
         const b = stats.lm("Sepal.Length ~ Petal.Width, data = iris")
         const ab = await Promise.all([a, b])
-        console.log(ab[0])
-        console.log(ab[1])
+        console.log(ab[0].join("\n"))
+        console.log(ab[1].join("\n"))
     } catch (e) {
         console.log(e)
     }
@@ -124,11 +135,58 @@ Coefficients:
      4.7776       0.8886 
 ```
 
-Values returned by the `hordes` functions, once in NodeJS, are string values matching the `stdout` of `Rscript`.
+By default, these functions will return an array of characters, corresponding to the output of R. 
+If you want to return one of the types supported by `node-rio`, you can specify `capture_output = false` in the `library()` function: that could improve the performance of your application if you have a lot of load.
+
+#### `mlibrary`
+
+`mlibrary` does the same job as `library` except the functions are natively memoized. 
+__This is probably the mode you will want to use on a regular basis, unless your data are changing regularly.__
+
+``` javascript
+const {library, mlibrary} = require('hordes');
+const base = library("base");
+const mbase = mlibrary("base");
+
+(async () => {
+    try {
+            const a = await base.sample("1:100, 5")
+            console.log("a:", a)
+            const b = await base.sample("1:100, 5")
+            console.log("b:", b)
+        } catch(e){
+            console.log(e)
+        }
+
+    try {
+            const a = await mbase.sample("1:100, 5")
+            console.log("a:", a)
+            const b = await mbase.sample("1:100, 5")
+            console.log("b:", b)
+        } catch(e){
+            console.log(e)
+        }
+}
+)();
+```
+
+```
+a: [1] 49 13 37 25 91
+
+b: [1]  5 17 68 26 29
+
+a: [1] 96 17  6  4 75
+
+b: [1] 96 17  6  4 75
+```
+
+
 
 ### Data Exchange
 
-If you want to exchange data between R and NodeJS, use an interchangeable format (JSON, arrow, base64 for images, raw strings...):
+If you want to exchange data between R and NodeJS, you can rely on the default `node-rio`, that can share a series of formats (string, numbers...), by passing `{capture_output: false}` as the option parameter to `library()`. 
+
+Otherwise, the function calls will return a string, so use an interchangeable format that can be converted in Node: JSON, arrow, base64 for images, raw strings...
 
 ``` javascript
 const {library} = require('hordes');
@@ -136,6 +194,7 @@ const jsonlite = library("jsonlite");
 const base = library("base");
 
 (async () => {
+    await hordes_init();
     try {
             const a = await jsonlite.toJSON("iris")
             console.log(JSON.parse(a)[0])
@@ -169,12 +228,6 @@ It can be installed with
 
 ```r
 remotes::install_github("colinfay/hordes", subdir = "r-hordes")
-```
-
-Or directly from the modules with 
-
-```
-cd node_modules/hordes/ && npm run r-hordes-install && cd ../..
 ```
 
 For example, to share images, you can create a function in a package (here named "`{hordex}`") that does: 
@@ -219,47 +272,6 @@ app.listen(2811, function () {
 > http://localhost:2811/ggplot?n=50
 > http://localhost:2811/ggplot?n=150
 
-#### `mlibrary`
-
-`mlibrary` does the same job as `library` except the functions are natively memoized. 
-
-``` javascript
-const {library, mlibrary} = require('hordes');
-const base = library("base");
-const mbase = mlibrary("base");
-
-(async () => {
-    try {
-            const a = await base.sample("1:100, 5")
-            console.log("a:", a)
-            const b = await base.sample("1:100, 5")
-            console.log("b:", b)
-        } catch(e){
-            console.log(e)
-        }
-
-    try {
-            const a = await mbase.sample("1:100, 5")
-            console.log("a:", a)
-            const b = await mbase.sample("1:100, 5")
-            console.log("b:", b)
-        } catch(e){
-            console.log(e)
-        }
-}
-)();
-```
-
-```
-a: [1] 49 13 37 25 91
-
-b: [1]  5 17 68 26 29
-
-a: [1] 96 17  6  4 75
-
-b: [1] 96 17  6  4 75
-```
-
 
 ### `get_hash`
 
@@ -301,6 +313,7 @@ Object.keys(golem).length
 #### `waiter`
 
 You can launch an R process that streams data and wait for a specific output in the stdout. 
+The specificity of `waiter` is that it doesn't rely on `node-rio`, but spawn a real R process, and reads the elements streamed on stdout.
 
 The promise resolves with and `{proc, raw_output}`: `proc` is the process object created by Node, `raw_output` is the output buffer, that can be turned to string with `.toString()`.
 
@@ -330,7 +343,7 @@ const app = express();
 
 app.get('/creategolem', async(req, res) => {
     try {
-        await waiter("golem::create_golem('pouet')", solve_on = "To continue working on your app");
+        await waiter("golem::create_golem('pouet')", {solve_on: "To continue working on your app"});
         res.send("Created ")
     } catch (e) {
         console.log(e)
@@ -345,22 +358,28 @@ app.listen(2811, function() {
 
 -> http://localhost:2811/creategolem
 
-### Changing the process that runs R
+### Changing the process that runs R in waiters 
 
 By default, the R code is launched by `RScript`, but you can specify another (for example if you need another version of R):
 
-``` javascript
-const { library } = require('hordes');
-const base = library("base", hash = null, process = '/usr/local/bin/RScript');
+```javascript
+const { waiter } = require("hordes")
+const express = require('express');
+const app = express();
 
-(async() => {
+app.get('/creategolem', async(req, res) => {
     try {
-        const a = await base.sample("1:100, 5")
-        console.log("a:", a)
+        await waiter("golem::create_golem('pouet')", {solve_on: "To continue working on your app", process: '/usr/local/bin/RScript'});
+        res.send("Created ")
     } catch (e) {
         console.log(e)
+        res.status(500).send("Error creating the golem project")
     }
-})();
+})
+
+app.listen(2811, function() {
+    console.log('Example app listening on port 2811!')
+})
 ```
 
 ### Examples
@@ -368,9 +387,9 @@ const base = library("base", hash = null, process = '/usr/local/bin/RScript');
 #### Simple example 
 
 ``` javascript 
-const { library } = require('hordes');
-const dplyr = library("dplyr");
-const stats = library("stats");
+const { mlibrary } = require('hordes');
+const dplyr = mlibrary("dplyr");
+const stats = mlibrary("stats");
 
 (async() => {
         try {
@@ -425,9 +444,9 @@ Coefficients:
 
 ``` javascript
 const express = require('express');
-const { library } = require('hordes');
+const { mlibrary } = require('hordes');
 const app = express();
-const stats = library("stats");
+const stats = mlibrary("stats");
 
 app.get('/lm', async(req, res) => {
     try {
@@ -480,3 +499,4 @@ app.listen(2811, function() {
 ```
 
 -> http://localhost:2811/creategolem?name=coucou
+*

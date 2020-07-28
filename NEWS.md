@@ -1,3 +1,8 @@
+# hordes 0.2.0
+
++ `hordes` now relies on RServer for its backend
++ The `{hordes}` R package is now installed by default when the node module is installed
+
 # hordes 0.1.3
 
 + `library` no longer has a hash parameter. To check that the hash of a package hasn't changed, now use the `get_hash()` function. 
