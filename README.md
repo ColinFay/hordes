@@ -245,9 +245,9 @@ Then in NodeJS:
 
 ```javascript
 const express = require('express');
-const {library} = require('hordes');
+const {mlibrary} = require('hordes');
 const app = express();
-const hordesx = library("hordesx")
+const hordesx = mlibrary("hordesx")
 
 app.get('/ggplot', async (req, res) => {
     try {
@@ -302,7 +302,7 @@ check_hash("golem", "blabla")
 
 ```javascript
 check_hash("golem", 'e2167f289a708b2cd3b774dd9d041b9e4b6d75584b9421185eb8d80ca8af4d8a')
-var golem = library("golem",
+var golem = library("golem")
 Object.keys(golem).length
 ```
 
